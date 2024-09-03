@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.LJW.Entities.User.UserDao">
+    <select id="findByID" parameterType="String" resultType="user">
+        select * from user_count where userid = #{userID}
+    </select>
+
+    <select id="findByName" parameterType="String" resultType="user">
+        select * from user_count where name = #{name}
+    </select>
+
+    <insert id="registerUser" parameterType="user">
+        insert into user_count values (#{userId},#{nickname},#{name},#{password},#{age},#{sex},
+                                       #{createTime},#{count},#{administrator},#{isEdit},
+                                       <choose>
+                                           <when test="email != null and email != ''">#{email}</when>
+                                            <otherwise>null</otherwise>
+                                       </choose>,
+                                        <choose>
+                                            <when test="address != null and address != ''">#{address}</when>
+                                            <otherwise>null</otherwise>
+                                        </choose>,
+                                        <choose>
+                                            <when test="selfIntroduction != null and selfIntroduction != ''">#{selfIntroduction}</when>
+                                            <otherwise>null</otherwise>
+                                        </choose>,
+                                       #{birthday},#{phone},#{headType})
+    </insert>
+
+    <insert id="registerActiveData" parameterType="String">
+        insert into active_index(userid) values (#{userID})
+    </insert>
+
+    <select id="getAllUser" resultType="activeData">
+        select u.nickname, u.userid, u.createTime,
+               u.administrator, a.support, a.against,
+               a.inform, a.reported, a.follow,
+               a.fans, a.post
+        from user_count u, active_index a
+        where u.userid = a.userid
+    </select>
+    
+    <delete id="deleteUser" parameterType="String">
+        delete from user_count where userid = #{userId}
+    </delete>
+    
+    <update id="setAdmin" parameterType="String">
+        update user_count set administrator = 1 where userid = #{userId}
+    </update>
+</mapper>

@@ -1,0 +1,46 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/mvc
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <bean id="commonsMultipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSizePerFile" value="5242800000"/>
+        <property name="defaultEncoding" value="UTF-8"/>
+        <property name="maxUploadSize" value="5242800000"/>
+        <property name="maxInMemorySize" value= "524280000"/>
+    </bean>
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="25"/>
+        <property name="maxTotal" value="20"/>
+        <property name="minIdle" value="0"/>
+    </bean>
+
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" scope="singleton">
+        <property name="hostName" value="127.0.0.1"/>
+        <property name="port" value="6379"/>
+        <property name="database" value="0"/>
+        <property name="timeout" value="1000"/>
+        <property name="poolConfig" ref="jedisPoolConfig"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+    </bean>
+
+    <bean id="serverSocket" class="java.net.ServerSocket">
+        <constructor-arg name="port" value="5786"/>
+    </bean>
+
+    <bean id="socketManger" class="cn.LJW.Controllers.EventCenter">
+        <constructor-arg name="serverSocket" ref="serverSocket"/>
+    </bean>
+
+</beans>
