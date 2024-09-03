@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.LJW.Entities.Resource.ResourceDao">
+    <insert id="insertFile" parameterType="fileBean">
+        insert into resource values (#{fileName},#{fileID},#{fileSuffix},#{description},
+                                     #{illustrate},#{fileSize}, #{uploadTime})
+    </insert>
+    
+    <select id="getFile" resultType="fileBean">
+        select * from resource
+    </select>
+</mapper>

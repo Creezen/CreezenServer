@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="cn.LJW.Entities.Feedback.FeedbckDao">
+    <insert id="insertFeedback" parameterType="feedbackBean">
+        insert into feedback values (#{feedbackID}, #{userID}, #{type}, #{title},
+                                     #{content}, #{createTime}, #{support}, #{against})
+    </insert>
+
+    <select id="getFeedback" resultType="feedbackBean">
+        select feedbackID, u.nickname userName, f.userID, type, title,
+               content, f.createTime, support, against
+               from feedback f, user_count u where u.userid = f.userID
+    </select>
+
+</mapper>
