@@ -71,7 +71,7 @@ class AccountManage : MyDispatchServlet() {
     @ResponseBody
     fun uplaodAvatar(userID: String, file: MultipartFile): String {
         println("$userID  ${file.originalFilename}")
-        file.transferTo(File("C:/Users/LJW/Desktop/store/head/$userID.png"))
+        file.transferTo(File("D:/FileSystem/head/$userID.png"))
         return JSONObject().run {
             put("status", true)
             toString()

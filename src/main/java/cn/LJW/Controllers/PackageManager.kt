@@ -15,7 +15,7 @@ import java.io.File
 @Controller
 class PackageManager: MyDispatchServlet() {
 
-    private val apkBasePath = "C:/Users/LJW/Desktop/store/APK"
+    private val apkBasePath = "D:/FileSystem/APK"
 
     @RequestMapping(value = ["/uploadApk"])
     @ResponseBody

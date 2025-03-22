@@ -19,6 +19,9 @@ class UserSocket(socket: Socket) {
             val line = reader.readLine()
             println("get line: $line")
             if (line.isNullOrEmpty()) {
+                reader.close()
+                writer.close()
+                socket.close()
                 return@workInThreadBlocked false
             }
             writer.write(line+"\n")

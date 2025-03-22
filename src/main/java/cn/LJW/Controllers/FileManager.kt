@@ -19,7 +19,7 @@ class FileManager: MyDispatchServlet() {
         println("${file.originalFilename}   $fileBean")
         val session = sqlSessionFactory?.openSession(true) ?: return ""
         val mapper = session.getMapper(ResourceDao::class.java)
-        file.transferTo(File("C:/Users/LJW/Desktop/store/${fileBean.fileID}${fileBean.fileSuffix}"))
+        file.transferTo(File("D:/FileSystem/${fileBean.fileID}${fileBean.fileSuffix}"))
         mapper.insertFile(fileBean)
         return JSONObject().apply {
             put("loadResult", true)
