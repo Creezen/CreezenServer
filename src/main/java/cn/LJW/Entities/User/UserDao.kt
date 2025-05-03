@@ -2,8 +2,8 @@ package cn.LJW.Entities.User
 
 interface UserDao {
 
-    fun findByID(userID: String): User
-    fun findByName(name: String): User
+    fun findByID(userID: String): User?
+    fun findByName(name: String): User?
 
     fun registerUser(user: User)
     fun registerActiveData(userID: String)

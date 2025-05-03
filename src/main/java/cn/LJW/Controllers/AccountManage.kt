@@ -32,11 +32,12 @@ class AccountManage : MyDispatchServlet() {
         response: HttpServletResponse,
         unique: String,
         password: String
-    ): String {
+    ): String? {
         println("$unique   $password")
-        val sqlSession = sqlSessionFactory?.openSession(true) ?: return getIntJSONString(0)
+        val sqlSession = sqlSessionFactory?.openSession(true) ?: return null
         val userDao = sqlSession.getMapper(UserDao::class.java)
-        val user: User = (if (unique.length < 20) userDao.findByName(unique) else userDao.findByID(unique))
+        val user = (if (unique.length < 20) userDao.findByName(unique) else userDao.findByID(unique))
+            ?: return getIntJSONString(0)
         if (user.password != password) return getIntJSONString(1)
         if (!sessionMap.containsKey(unique)) {
             val onlineSession = OnlineSession(firstTimeCookie, session.id)

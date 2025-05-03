@@ -15,12 +15,15 @@ class SynergyManager: MyDispatchServlet() {
 
     @RequestMapping("/postSynergy")
     @ResponseBody
-    fun saveSynergy(@RequestParam paragraphs: ArrayList<String>): Boolean {
+    fun saveSynergy(
+        @RequestParam paragraphs: ArrayList<String>,
+        userID: String
+    ): Boolean {
         val time = System.currentTimeMillis()
         val session = sqlSessionFactory?.openSession(false) ?: return false
         val mapper = session.getMapper(ArticleDao::class.java)
         val article = ArticleBean().apply {
-            sUID = "1722671879576sudbWTx"
+            sUID = userID
             title = "new paper"
             createTime = time
             updateTime = time
