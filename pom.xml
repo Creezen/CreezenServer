@@ -8,6 +8,7 @@
   <packaging>war</packaging>
 
   <build>
+      <finalName>ROOT</finalName>
     <plugins>
       <!-- 设置编译版本 -->
         <plugin>
@@ -37,8 +38,13 @@
                 </execution>
             </executions>
             <configuration>
-                <jvmTarget>1.8</jvmTarget>
+                <jvmTarget>17</jvmTarget>
             </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.3.2</version> <!-- 关键：升级版本 -->
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

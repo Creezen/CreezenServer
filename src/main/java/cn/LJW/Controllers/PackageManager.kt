@@ -15,7 +15,11 @@ import java.io.File
 @Controller
 class PackageManager: MyDispatchServlet() {
 
-    private val apkBasePath = "D:/FileSystem/APK"
+    private val apkBasePath = if (isLocalEnvironment()) {
+        "D:/FileSystem/APK"
+    } else {
+        "/www/CreezenServer/FileSystem/APK"
+    }
 
     @RequestMapping(value = ["/uploadApk"])
     @ResponseBody
