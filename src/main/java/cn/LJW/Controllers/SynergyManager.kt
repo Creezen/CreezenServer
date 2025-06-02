@@ -69,4 +69,10 @@ class SynergyManager: MyDispatchServlet() {
         return paragraphCommandList
     }
 
+    @RequestMapping("postCommen")
+    @ResponseBody
+    fun postCommen(commen: String): Boolean {
+        println("receive commen:  $commen")
+        return true
+    }
 }

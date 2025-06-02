@@ -3,7 +3,6 @@ package cn.LJW.Controllers
 import cn.LJW.Entities.event.UserSocket
 import cn.LJW.MyDispatchServlet
 import cn.LJW.Tool.workInThread
-import com.creezen.commontool.CreezenTool.getRandomString
 import org.springframework.stereotype.Component
 import java.net.ServerSocket
 import java.net.Socket

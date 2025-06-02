@@ -4,15 +4,10 @@ import cn.LJW.Controllers.EventCenter
 import org.apache.ibatis.io.Resources
 import org.apache.ibatis.session.SqlSessionFactory
 import org.apache.ibatis.session.SqlSessionFactoryBuilder
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.getBean
 import org.springframework.context.ApplicationContext
-import org.springframework.context.event.ContextRefreshedEvent
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.web.servlet.DispatcherServlet
 import java.io.IOException
-import java.lang.IllegalArgumentException
-import java.net.ServerSocket
 
 open class MyDispatchServlet : DispatcherServlet() {
 
