@@ -8,4 +8,5 @@ data class FileBean(
     val illustrate: String,
     val fileSize: Long,
     val uploadTime: String,
+    var hash: String = ""
 )

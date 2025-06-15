@@ -1,30 +1,34 @@
 package cn.LJW.Controllers
 
-import cn.LJW.Entities.article.ArticleBean
-import cn.LJW.Entities.article.ArticleDao
-import cn.LJW.Entities.article.ParagraphBean
-import cn.LJW.Entities.article.ParagraphCommandBean
+import cn.LJW.Entities.article.*
 import cn.LJW.MyDispatchServlet
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
+import java.math.BigInteger
 
 @Controller
 class SynergyManager: MyDispatchServlet() {
 
+    private val mapper by lazy {
+        val session = sqlSessionFactory.openSession(true)
+        session.getMapper(ArticleDao::class.java)
+    }
+
     @RequestMapping("/postSynergy")
     @ResponseBody
     fun saveSynergy(
+        articleTitle: String,
         @RequestParam paragraphs: ArrayList<String>,
         userID: String
     ): Boolean {
         val time = System.currentTimeMillis()
-        val session = sqlSessionFactory?.openSession(false) ?: return false
+        val session = sqlSessionFactory.openSession(false) ?: return false
         val mapper = session.getMapper(ArticleDao::class.java)
         val article = ArticleBean().apply {
             sUID = userID
-            title = "new paper"
+            title = articleTitle
             createTime = time
             updateTime = time
             favor = 0
@@ -44,15 +48,13 @@ class SynergyManager: MyDispatchServlet() {
     @RequestMapping("getSynergy")
     @ResponseBody
     fun getSynergy(): List<ArticleBean> {
-        val session = sqlSessionFactory?.openSession(true) ?: return arrayListOf()
-        val mapper = session.getMapper(ArticleDao::class.java)
         return mapper.getArticle()
     }
 
     @RequestMapping("getArticle")
     @ResponseBody
     fun getArticle(synergyId: Long): List<ParagraphCommandBean> {
-        val session = sqlSessionFactory?.openSession(false) ?: return arrayListOf()
+        val session = sqlSessionFactory.openSession(false) ?: return arrayListOf()
         val mapper = session.getMapper(ArticleDao::class.java)
         val paragraphList = mapper.getParagraph(synergyId)
         val paragraphCommandList = arrayListOf<ParagraphCommandBean>()
@@ -71,8 +73,22 @@ class SynergyManager: MyDispatchServlet() {
 
     @RequestMapping("postCommen")
     @ResponseBody
-    fun postCommen(commen: String): Boolean {
-        println("receive commen:  $commen")
+    fun postCommen(
+        synergyId: Long,
+        paragraphId: Long,
+        userId: String,
+        comment: String
+    ): Boolean {
+        println("receive commen:  $comment")
+        mapper.insertComment(CommentBean(
+            synergyId.toBigInteger(),
+            paragraphId,
+            userId,
+            -1,
+            comment,
+            0,
+            System.currentTimeMillis().toBigInteger()
+        ))
         return true
     }
 }

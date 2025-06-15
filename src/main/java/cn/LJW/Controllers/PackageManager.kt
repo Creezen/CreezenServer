@@ -15,24 +15,20 @@ import java.io.File
 @Controller
 class PackageManager: MyDispatchServlet() {
 
-    private val apkBasePath = if (isLocalEnvironment()) {
-        "D:/FileSystem/APK"
-    } else {
-        "/www/CreezenServer/FileSystem/APK"
-    }
+    private val apkBasePath = "${BASE_FILE_PATH}APK/"
 
     @RequestMapping(value = ["/uploadApk"])
     @ResponseBody
     fun uploadApk(@RequestParam("apkFile")  file: MultipartFile): Boolean {
         val tempName = getRandomString(20)
-        val tempPath = "$apkBasePath/$tempName.apk"
+        val tempPath = "$apkBasePath$tempName.apk"
         val tempFile = File(tempPath)
         file.transferTo(tempFile)
         try {
             val metaData = resolveApkFile(tempFile)
             val versionName = metaData.versionName
             val versionCode = metaData.versionCode
-            val destFile = File("$apkBasePath/$versionCode")
+            val destFile = File("$apkBasePath$versionCode")
             if (destFile.exists().not()) {
                 if (versionCode <= getMaxVersion()) {
                     tempFile.delete()
@@ -55,7 +51,7 @@ class PackageManager: MyDispatchServlet() {
     @ResponseBody
     fun checkVersion(): ApkSimpleInfo {
         val maxVersion = getMaxVersion()
-        val fileDirectory = "${apkBasePath}/$maxVersion"
+        val fileDirectory = "${apkBasePath}$maxVersion"
         val file = File(fileDirectory).listFiles()?.get(0) ?: return ApkSimpleInfo("0", 0, 0)
         val metaData = resolveApkFile(file)
         val modifyTime = file.lastModified()
@@ -73,7 +69,7 @@ class PackageManager: MyDispatchServlet() {
         val file = File(apkBasePath)
         if (file.exists().not() || file.isDirectory.not() || file.listFiles().isNullOrEmpty()) return 0
         var maxVersionCode = 0
-        file.listFiles().forEach {
+        file.listFiles()?.forEach {
             if (it.isFile) return@forEach
             val code = it.name.toInt()
             maxVersionCode = if (maxVersionCode < code) code else maxVersionCode

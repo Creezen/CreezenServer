@@ -11,4 +11,6 @@ interface ArticleDao {
     fun getParagraph(synergyId: Long): List<ParagraphBean>
 
     fun getComment(paragraphId: Long): List<CommentBean>
+
+    fun insertComment(commentBean: CommentBean)
 }

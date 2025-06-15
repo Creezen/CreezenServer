@@ -23,4 +23,9 @@
     <select id="getComment" parameterType="Long" resultType="commentBean">
         select * from paragraph_comment where paragraphId = #{paragraphId}
     </select>
+
+    <insert id="insertComment" parameterType="commentBean">
+        insert into paragraph_comment(synergyId, paragraphId, uid, comment, favor, createTime)
+            values (#{synergyId}, #{paragraphId}, #{userId}, #{cotent}, #{favor}, #{createTime})
+    </insert>
 </mapper>

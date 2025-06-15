@@ -14,10 +14,14 @@ open class MyDispatchServlet : DispatcherServlet() {
     companion object {
         private var environmentType: Int = -1
         @JvmStatic
-        protected var sqlSessionFactory: SqlSessionFactory? = null
+        protected lateinit var sqlSessionFactory: SqlSessionFactory
         protected var applicationContext: ApplicationContext? = null
         @JvmStatic
         var redisTemplate: StringRedisTemplate? = null
+
+        private var baseFilePath: String = ""
+        val BASE_FILE_PATH: String
+            get() = baseFilePath
 
         fun isLocalEnvironment(): Boolean {
             return environmentType == 1
@@ -32,6 +36,7 @@ open class MyDispatchServlet : DispatcherServlet() {
         initMybatis(context)
         initRedis(context)
         initSocket(context)
+        initProperties()
         println("应用全局环境：$applicationContext\n" +
                 "数据连接工厂：$sqlSessionFactory\n" +
                 "事件分发中心：$eventCenter")
@@ -44,7 +49,7 @@ open class MyDispatchServlet : DispatcherServlet() {
         } else if (env == "CLOUD_MACHINE") {
             environmentType = 2
         } else {
-            throw IllegalArgumentException("UNKNOW MACHIE!!!")
+            throw IllegalArgumentException("UNKNOWN MACHINE!!!")
         }
         println("current environment:  $environmentType")
     }
@@ -52,9 +57,6 @@ open class MyDispatchServlet : DispatcherServlet() {
     private fun initMybatis(context: ApplicationContext) {
         if (applicationContext == null) {
             applicationContext = context
-        }
-        if(sqlSessionFactory != null) {
-            return
         }
         try {
             val environment = if (isLocalEnvironment()) {
@@ -78,5 +80,13 @@ open class MyDispatchServlet : DispatcherServlet() {
     private fun initSocket(context: ApplicationContext) {
         eventCenter = context.getBean(EventCenter::class.java)
         eventCenter?.beginSocket()
+    }
+
+    private fun initProperties() {
+        if (isLocalEnvironment()) {
+            baseFilePath = "D:/FileSystem/"
+        } else {
+            baseFilePath = "/www/CreezenServer/FileSystem/"
+        }
     }
 }
