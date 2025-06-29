@@ -18,7 +18,7 @@ class FileManager: MyDispatchServlet() {
     @ResponseBody
     fun upload(fileBean: FileBean, file: MultipartFile): String {
         println("${file.originalFilename}   $fileBean")
-        val session = sqlSessionFactory?.openSession(true) ?: return ""
+        val session = sqlSessionFactory.openSession(true) ?: return ""
         val mapper = session.getMapper(ResourceDao::class.java)
         val destFile = File("$BASE_FILE_PATH${fileBean.fileID}${fileBean.fileSuffix}")
         file.transferTo(destFile)
