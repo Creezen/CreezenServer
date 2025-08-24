@@ -1,6 +1,5 @@
 package cn.LJW.Controllers
 
-import cn.LJW.Entities.Feedback.FeedbckDao
 import cn.LJW.Entities.history.HistoryBean
 import cn.LJW.Entities.history.HistoryDao
 import cn.LJW.MyDispatchServlet
@@ -20,5 +19,12 @@ class HistoryControll: MyDispatchServlet() {
     fun sendEvent(time: String, event: String): Boolean {
         mapper?.insertEvent(HistoryBean(time, event))
         return true
+    }
+
+    @RequestMapping("/queryAllEvent")
+    @ResponseBody
+    fun queryAllEvent(): List<HistoryBean> {
+        val list = mapper?.queryAllEvent() ?: return listOf()
+        return list
     }
 }

@@ -5,4 +5,8 @@
     <insert id="insertEvent" parameterType="history">
         insert into history values (#{time}, #{event})
     </insert>
+
+    <select id="queryAllEvent" resultType="history">
+        select * from history
+    </select>
 </mapper>

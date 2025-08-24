@@ -22,4 +22,12 @@ class SeniorManager: MyDispatchServlet() {
         mapper.addAdvice(seniorAdvice)
         return true
     }
+
+    @RequestMapping("/getAdvice")
+    @ResponseBody
+    fun getAdvice(primary: String, second: String, tertiary: String): List<SeniorAdvice> {
+        val query = SeniorAdvice(primary, second, tertiary, )
+        val list = mapper.getAdvice(query)
+        return list
+    }
 }

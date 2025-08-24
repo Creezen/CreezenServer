@@ -13,7 +13,7 @@
         <typeAlias type="cn.LJW.Entities.article.ArticleBean" alias="articleBean"/>
         <typeAlias type="cn.LJW.Entities.article.ParagraphBean" alias="paragraphBean"/>
         <typeAlias type="cn.LJW.Entities.article.CommentBean" alias="commentBean"/>
-        <typeAlias type="cn.LJW.Entities.senior.SeniorDao" alias="seniorDao"/>
+        <typeAlias type="cn.LJW.Entities.senior.SeniorAdvice" alias="seniorBean"/>
         <typeAlias type="cn.LJW.Entities.history.HistoryBean" alias="history"/>
     </typeAliases>
 
