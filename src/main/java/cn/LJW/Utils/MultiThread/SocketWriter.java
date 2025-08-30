@@ -23,7 +23,7 @@ public class SocketWriter extends BaseSocketThread {
             while(true){
                 if(null==socket||socket.isClosed()||socket.isOutputShutdown()) break;
                 System.out.println("wait stream");
-                mapRecords=stringRedisTemplate.opsForStream().read(consumer,
+                mapRecords = stringRedisTemplate.opsForStream().read(consumer,
                         StreamReadOptions.empty().count(1).block(Duration.ofMillis(50000)),
                         StreamOffset.create("msg", ReadOffset.lastConsumed()));
                 for (MapRecord<String, Object, Object> mapRecord : mapRecords) {

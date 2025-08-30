@@ -4,3 +4,5 @@ target
 Tianji.iml
 Log
 /src/main/webapp/.well-known
+/src/main/webapp/WEB-INF/classes
+/out

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app version="2.4"
-         xmlns="http://java.sun.com/xml/ns/j2ee"
+<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" >
+         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
+                      https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
+         version="6.1">
 
+    <display-name>你的应用名称</display-name>
     <context-param>
         <param-name>log4jConfigLocation</param-name>
         <param-value>classpath:log4j.properties</param-value>
@@ -34,6 +36,17 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:SpringMVC/SpringMVCConfig.xml</param-value>
         </init-param>
+        <multipart-config>
+            <!-- 临时文件存储目录 -->
+            <location>/tmp</location>
+            <!-- 最大文件大小：10MB -->
+            <max-file-size>5242800000</max-file-size>
+            <!-- 最大请求大小：50MB -->
+            <max-request-size>5242800000</max-request-size>
+            <!-- 文件大小超过多少时写入磁盘 -->
+            <file-size-threshold>2048</file-size-threshold>
+            <encoding>UTF-8</encoding>
+        </multipart-config>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

@@ -1,13 +1,8 @@
 package cn.LJW.interceptor
 
-import cn.LJW.MyDispatchServlet
-import org.springframework.data.redis.connection.stream.ReadOffset
-import org.springframework.data.redis.connection.stream.StreamOffset
-import org.springframework.data.redis.connection.stream.StreamReadOptions
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.web.servlet.HandlerInterceptor
-import java.time.Duration
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
 class StatusInterceptor: HandlerInterceptor {
 

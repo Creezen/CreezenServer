@@ -4,17 +4,17 @@ import cn.LJW.Entities.Net.OnlineSession
 import cn.LJW.Entities.User.User
 import cn.LJW.Entities.User.UserDao
 import cn.LJW.MyDispatchServlet
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpSession
 import org.json.JSONObject
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpSession
 
 @Controller
 class AccountManage : MyDispatchServlet() {
@@ -30,8 +30,8 @@ class AccountManage : MyDispatchServlet() {
         @CookieValue("lastTime") lastTimeCookie: String?,
         session: HttpSession,
         response: HttpServletResponse,
-        unique: String,
-        password: String
+        @RequestParam("unique") unique: String,
+        @RequestParam("password") password: String
     ): String? {
         println("$unique   $password")
         val sqlSession = sqlSessionFactory?.openSession(true) ?: return null
