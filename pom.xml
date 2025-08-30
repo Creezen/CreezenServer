@@ -10,7 +10,6 @@
   <build>
       <finalName>ROOT</finalName>
     <plugins>
-      <!-- 设置编译版本 -->
         <plugin>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-maven-plugin</artifactId>
@@ -39,17 +38,18 @@
             </executions>
             <configuration>
                 <jvmTarget>17</jvmTarget>
+                <javaParameters>true</javaParameters>
             </configuration>
         </plugin>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <version>3.3.2</version> <!-- 关键：升级版本 -->
+            <version>3.3.2</version>
         </plugin>
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.11.0</version>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.13.0</version>
             <executions>
                 <execution>
                     <id>compile</id>
@@ -70,10 +70,7 @@
                 <source>17</source>
                 <target>17</target>
                 <encoding>UTF-8</encoding>
-                <compilerArgs>
-                    <arg>-parameters</arg>
-                </compilerArgs>
-          </configuration>
+            </configuration>
         </plugin>
     </plugins>
   </build>
@@ -83,7 +80,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <kotlin.version>2.1.0</kotlin.version>
+      <kotlin.version>2.0.0</kotlin.version>
   </properties>
 
   <dependencies>
@@ -125,8 +122,8 @@
     </dependency>
 
     <dependency>
-      <groupId>mysql</groupId>
-      <artifactId>mysql-connector-java</artifactId>
+      <groupId>com.mysql</groupId>
+      <artifactId>mysql-connector-j</artifactId>
       <version>8.0.31</version>
     </dependency>
 
@@ -174,7 +171,7 @@
 
     <dependency>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
+      <artifactId>slf4j-reload4j</artifactId>
       <version>2.0.7</version>
     </dependency>
 

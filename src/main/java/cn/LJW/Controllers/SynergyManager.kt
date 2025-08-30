@@ -51,7 +51,7 @@ class SynergyManager: MyDispatchServlet() {
         return mapper.getArticle()
     }
 
-    @RequestMapping("getArticle")
+    @RequestMapping("getArticleFragment")
     @ResponseBody
     fun getArticle(synergyId: Long): List<ParagraphCommandBean> {
         val session = sqlSessionFactory.openSession(false) ?: return arrayListOf()

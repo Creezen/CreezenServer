@@ -36,18 +36,14 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:SpringMVC/SpringMVCConfig.xml</param-value>
         </init-param>
-        <multipart-config>
-            <!-- 临时文件存储目录 -->
-            <location>/tmp</location>
-            <!-- 最大文件大小：10MB -->
-            <max-file-size>5242800000</max-file-size>
-            <!-- 最大请求大小：50MB -->
-            <max-request-size>5242800000</max-request-size>
-            <!-- 文件大小超过多少时写入磁盘 -->
-            <file-size-threshold>2048</file-size-threshold>
-            <encoding>UTF-8</encoding>
-        </multipart-config>
         <load-on-startup>1</load-on-startup>
+        <multipart-config>
+            <location>D:\download</location>
+            <max-file-size>5242800000</max-file-size>
+            <max-request-size>5242800000</max-request-size>
+            <file-size-threshold>2048</file-size-threshold>
+        </multipart-config>
+
     </servlet>
 
     <servlet-mapping>
