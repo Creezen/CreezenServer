@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="https://jakarta.ee/xml/ns/jakartaee"
+<web-app version="6.1"
+        xmlns="https://jakarta.ee/xml/ns/jakartaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee
-                      https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd"
-         version="6.1">
+         https://jakarta.ee/xml/ns/jakartaee/web-app_6_1.xsd">
 
     <display-name>你的应用名称</display-name>
     <context-param>
@@ -41,7 +41,7 @@
             <location>D:\download</location>
             <max-file-size>5242800000</max-file-size>
             <max-request-size>5242800000</max-request-size>
-            <file-size-threshold>2048</file-size-threshold>
+            <file-size-threshold>0</file-size-threshold>
         </multipart-config>
 
     </servlet>

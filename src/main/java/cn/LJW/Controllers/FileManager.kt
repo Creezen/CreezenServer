@@ -23,7 +23,7 @@ class FileManager: MyDispatchServlet() {
         val destFile = File("$BASE_FILE_PATH${fileBean.fileID}${fileBean.fileSuffix}")
         file.transferTo(destFile)
         mapper.insertFile(fileBean)
-        println("file hashcode: ${ FileHelper.getFileHash(destFile, "SHA256") }")
+//        println("file hashcode: ${ FileHelper.getFileHash(destFile, "SHA256") }")
         return JSONObject().apply {
             put("loadResult", true)
         }.toString()

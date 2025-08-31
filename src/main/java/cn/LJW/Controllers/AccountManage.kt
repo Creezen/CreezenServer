@@ -4,9 +4,11 @@ import cn.LJW.Entities.Net.OnlineSession
 import cn.LJW.Entities.User.User
 import cn.LJW.Entities.User.UserDao
 import cn.LJW.MyDispatchServlet
+import cn.LJW.Utils.FileHelper
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
+import org.apache.commons.io.FileUtils
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CookieValue
@@ -70,7 +72,11 @@ class AccountManage : MyDispatchServlet() {
     @RequestMapping(value = ["/postAvatar"])
     @ResponseBody
     fun uplaodAvatar(userID: String, file: MultipartFile): String {
+        //根据web.xml里面的file-size-threshold判断是否要存在磁盘（文件夹下）
+        //MultipartFile操作的实际上是临时文件夹下面的文件
+        //在请求结束后，这个MultipartFile实例被销毁，临时文件夹被删除
         println("$userID  ${file.originalFilename}")
+//        val hash = FileHelper.getFileHash(file.inputStream, "SHA256")
         file.transferTo(File("D:/FileSystem/head/$userID.png"))
         return JSONObject().run {
             put("status", true)
@@ -81,7 +87,7 @@ class AccountManage : MyDispatchServlet() {
     @RequestMapping(value = ["/getAllUser"])
     @ResponseBody
     fun getAllUsers(): String{
-        val session = sqlSessionFactory?.openSession(true) ?: return ""
+        val session = sqlSessionFactory.openSession(true) ?: return ""
         session.use {
             val mapper = it.getMapper(UserDao::class.java)
             val result = mapper.getAllUser()
