@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.LJW.Entities.Resource.ResourceDao">
+<mapper namespace="com.jayce.vexis.entities.file.FileDao">
     <insert id="insertFile" parameterType="fileBean">
         insert into resource values (#{fileName},#{fileID},#{fileSuffix},#{description},
-                                     #{illustrate},#{fileSize}, #{uploadTime})
+                                     #{illustrate},#{fileSize}, #{uploadTime}, #{fileHash})
     </insert>
     
     <select id="getFile" resultType="fileBean">
         select * from resource
+    </select>
+
+    <select id="findFileByHash" parameterType="String" resultType="fileBean">
+        select * from resource where fileHash = #{fileHash}
     </select>
 </mapper>

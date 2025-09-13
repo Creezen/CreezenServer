@@ -6,15 +6,15 @@
     <properties resource="ConfigParamters.properties"/>
 
     <typeAliases>
-        <typeAlias type="cn.LJW.Entities.User.User" alias="user"/>
-        <typeAlias type="cn.LJW.Entities.Resource.FileBean" alias="fileBean"/>
-        <typeAlias type="cn.LJW.Entities.Feedback.FeedbackBean" alias="feedbackBean"/>
-        <typeAlias type="cn.LJW.Entities.User.ActiveData" alias="activeData"/>
-        <typeAlias type="cn.LJW.Entities.article.ArticleBean" alias="articleBean"/>
-        <typeAlias type="cn.LJW.Entities.article.ParagraphBean" alias="paragraphBean"/>
-        <typeAlias type="cn.LJW.Entities.article.CommentBean" alias="commentBean"/>
-        <typeAlias type="cn.LJW.Entities.senior.SeniorAdvice" alias="seniorBean"/>
-        <typeAlias type="cn.LJW.Entities.history.HistoryBean" alias="history"/>
+        <typeAlias type="com.jayce.vexis.entities.user.User" alias="user"/>
+        <typeAlias type="com.jayce.vexis.entities.file.FileBean" alias="fileBean"/>
+        <typeAlias type="com.jayce.vexis.entities.Feedback.FeedbackBean" alias="feedbackBean"/>
+        <typeAlias type="com.jayce.vexis.entities.user.ActiveData" alias="activeData"/>
+        <typeAlias type="com.jayce.vexis.entities.article.ArticleBean" alias="articleBean"/>
+        <typeAlias type="com.jayce.vexis.entities.article.ParagraphBean" alias="paragraphBean"/>
+        <typeAlias type="com.jayce.vexis.entities.article.CommentBean" alias="commentBean"/>
+        <typeAlias type="com.jayce.vexis.entities.senior.SeniorAdvice" alias="seniorBean"/>
+        <typeAlias type="com.jayce.vexis.entities.history.HistoryBean" alias="history"/>
     </typeAliases>
 
     <environments default="LOCAL">

@@ -15,7 +15,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**"/>
-            <bean class="cn.LJW.interceptor.StatusInterceptor"/>
+            <bean class="com.jayce.vexis.interceptor.StatusInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
@@ -31,7 +31,7 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <context:component-scan base-package="cn.LJW.Controllers"/>
+    <context:component-scan base-package="com.jayce.vexis.controllers"/>
 
     <mvc:default-servlet-handler/>
 </beans>

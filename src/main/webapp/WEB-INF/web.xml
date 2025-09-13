@@ -31,7 +31,7 @@
 
     <servlet>
         <servlet-name>DispatchServlet</servlet-name>
-        <servlet-class>cn.LJW.MyDispatchServlet</servlet-class>
+        <servlet-class>com.jayce.vexis.MyDispatchServlet</servlet-class>
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <param-value>classpath:SpringMVC/SpringMVCConfig.xml</param-value>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="cn.LJW.Entities.senior.SeniorDao">
+<mapper namespace="com.jayce.vexis.entities.senior.SeniorDao">
     <insert id="addAdvice" parameterType="seniorBean">
         insert into senior values (#{primary}, #{second}, #{tertiary}, #{content})
     </insert>

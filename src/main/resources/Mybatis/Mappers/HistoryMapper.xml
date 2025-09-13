@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="cn.LJW.Entities.history.HistoryDao">
+<mapper namespace="com.jayce.vexis.entities.history.HistoryDao">
     <insert id="insertEvent" parameterType="history">
         insert into history values (#{time}, #{event})
     </insert>
