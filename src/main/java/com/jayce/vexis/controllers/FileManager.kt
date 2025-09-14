@@ -1,13 +1,12 @@
 package com.jayce.vexis.controllers
 
+import com.creezen.commontool.FileBean
 import com.jayce.vexis.MyDispatchServlet
-import com.jayce.vexis.entities.file.FileBean
 import com.jayce.vexis.entities.file.FileDao
 import com.jayce.vexis.utils.FileHelper
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile

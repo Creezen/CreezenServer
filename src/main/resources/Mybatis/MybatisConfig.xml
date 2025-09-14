@@ -7,7 +7,7 @@
 
     <typeAliases>
         <typeAlias type="com.jayce.vexis.entities.user.User" alias="user"/>
-        <typeAlias type="com.jayce.vexis.entities.file.FileBean" alias="fileBean"/>
+        <typeAlias type="com.creezen.commontool.FileBean" alias="fileBean"/>
         <typeAlias type="com.jayce.vexis.entities.Feedback.FeedbackBean" alias="feedbackBean"/>
         <typeAlias type="com.jayce.vexis.entities.user.ActiveData" alias="activeData"/>
         <typeAlias type="com.jayce.vexis.entities.article.ArticleBean" alias="articleBean"/>
