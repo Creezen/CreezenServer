@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jayce.vexis.entities.file.FileDao">
+<mapper namespace="com.jayce.vexis.dao.FileDao">
     <insert id="insertFile" parameterType="fileBean">
         insert into resource values (#{fileName},#{fileID},#{fileSuffix},#{description},
                                      #{illustrate},#{fileSize}, #{uploadTime}, #{fileHash})

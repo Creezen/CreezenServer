@@ -1,7 +1,7 @@
 package com.jayce.vexis.controllers
 
-import com.jayce.vexis.entities.Feedback.FeedbackBean
-import com.jayce.vexis.entities.Feedback.FeedbckDao
+import com.creezen.commontool.bean.FeedbackBean
+import com.jayce.vexis.dao.FeedbckDao
 import com.jayce.vexis.MyDispatchServlet
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
@@ -25,7 +25,7 @@ class FeedbackManager: MyDispatchServlet() {
             "normal",
             title,
             content,
-            "${System.currentTimeMillis()}",
+            System.currentTimeMillis(),
             0,
             0
         )

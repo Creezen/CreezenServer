@@ -1,7 +1,9 @@
 package com.jayce.vexis.controllers
 
-import com.jayce.vexis.entities.user.UserDao
+import com.creezen.commontool.bean.UserBean
+import com.jayce.vexis.dao.UserDao
 import com.jayce.vexis.MyDispatchServlet
+import com.jayce.vexis.OnlineSession
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
@@ -17,7 +19,7 @@ import java.io.File
 class AccountManage : MyDispatchServlet() {
 
     companion object {
-        private val sessionMap: MutableMap<String, com.jayce.vexis.entities.Net.OnlineSession> = HashMap()
+        private val sessionMap: MutableMap<String, OnlineSession> = HashMap()
     }
 
     @RequestMapping(value = ["/login"])
@@ -37,7 +39,7 @@ class AccountManage : MyDispatchServlet() {
             ?: return getIntJSONString(0)
         if (user.password != password) return getIntJSONString(1)
         if (!sessionMap.containsKey(unique)) {
-            val onlineSession = com.jayce.vexis.entities.Net.OnlineSession(firstTimeCookie, session.id)
+            val onlineSession = OnlineSession(firstTimeCookie, session.id)
             onlineSession.loginTime.add(lastTimeCookie)
             sessionMap[unique] = onlineSession
         } else if (firstTimeCookie == sessionMap[unique]!!.firstTimeCookie) {
@@ -52,8 +54,8 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/register"])
     @ResponseBody
-    fun register(type: String, requestUser: com.jayce.vexis.entities.user.User): String {
-        val session = sqlSessionFactory?.openSession(true) ?: return ""
+    fun register(type: String, requestUser: UserBean): String {
+        val session = sqlSessionFactory.openSession(true) ?: return ""
         val userDao = session.getMapper(UserDao::class.java)
         return if (type == "0") {
             val user = userDao.findByName(requestUser.name)
@@ -97,7 +99,7 @@ class AccountManage : MyDispatchServlet() {
     @RequestMapping(value = ["/managerUser"])
     @ResponseBody
     fun manageUser(operation: Int, userId: String): String {
-        val session = sqlSessionFactory?.openSession(true)
+        val session = sqlSessionFactory.openSession(true)
             ?: return JSONObject().run {
                 put("operationResult",  false)
                 toString()
@@ -122,7 +124,7 @@ class AccountManage : MyDispatchServlet() {
         }
     }
 
-    private fun getJSONString(user: com.jayce.vexis.entities.user.User): String {
+    private fun getJSONString(user: UserBean): String {
         return JSONObject(user).toString()
     }
 

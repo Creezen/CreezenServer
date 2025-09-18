@@ -6,15 +6,15 @@
     <properties resource="ConfigParamters.properties"/>
 
     <typeAliases>
-        <typeAlias type="com.jayce.vexis.entities.user.User" alias="user"/>
-        <typeAlias type="com.creezen.commontool.FileBean" alias="fileBean"/>
-        <typeAlias type="com.jayce.vexis.entities.Feedback.FeedbackBean" alias="feedbackBean"/>
-        <typeAlias type="com.jayce.vexis.entities.user.ActiveData" alias="activeData"/>
-        <typeAlias type="com.jayce.vexis.entities.article.ArticleBean" alias="articleBean"/>
-        <typeAlias type="com.jayce.vexis.entities.article.ParagraphBean" alias="paragraphBean"/>
-        <typeAlias type="com.jayce.vexis.entities.article.CommentBean" alias="commentBean"/>
-        <typeAlias type="com.jayce.vexis.entities.senior.SeniorAdvice" alias="seniorBean"/>
-        <typeAlias type="com.jayce.vexis.entities.history.HistoryBean" alias="history"/>
+        <typeAlias type="com.creezen.commontool.bean.UserBean" alias="user"/>
+        <typeAlias type="com.creezen.commontool.bean.FileBean" alias="fileBean"/>
+        <typeAlias type="com.creezen.commontool.bean.FeedbackBean" alias="feedbackBean"/>
+        <typeAlias type="com.creezen.commontool.bean.ActiveBean" alias="activeData"/>
+        <typeAlias type="com.creezen.commontool.bean.ArticleBean" alias="articleBean"/>
+        <typeAlias type="com.creezen.commontool.bean.SectionBean" alias="sectionBean"/>
+        <typeAlias type="com.creezen.commontool.bean.RemarkBean" alias="remarkBean"/>
+        <typeAlias type="com.creezen.commontool.bean.PeerAdviceBean" alias="peerAdviceBean"/>
+        <typeAlias type="com.creezen.commontool.bean.HistoryBean" alias="historyBean"/>
     </typeAliases>
 
     <environments default="LOCAL">

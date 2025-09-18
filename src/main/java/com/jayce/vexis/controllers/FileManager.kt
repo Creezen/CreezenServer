@@ -1,8 +1,8 @@
 package com.jayce.vexis.controllers
 
-import com.creezen.commontool.FileBean
+import com.creezen.commontool.bean.FileBean
 import com.jayce.vexis.MyDispatchServlet
-import com.jayce.vexis.entities.file.FileDao
+import com.jayce.vexis.dao.FileDao
 import com.jayce.vexis.utils.FileHelper
 import org.json.JSONObject
 import org.springframework.stereotype.Controller

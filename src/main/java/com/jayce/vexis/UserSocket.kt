@@ -1,4 +1,4 @@
-package com.jayce.vexis.entities.event
+package com.jayce.vexis
 
 import com.jayce.vexis.Tool.workInThreadBlocked
 import java.io.BufferedReader

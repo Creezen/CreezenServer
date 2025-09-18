@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jayce.vexis.entities.article.ArticleDao">
+<mapper namespace="com.jayce.vexis.dao.ArticleDao">
     <insert id="saveArticle" parameterType="articleBean"
         useGeneratedKeys="true" keyProperty="synergyId">
         insert into synergy(sUID, title, createTime, updateTime, favor)
         values (#{sUID}, #{title}, #{createTime}, #{updateTime}, #{favor})
     </insert>
     
-    <insert id="saveParagraph" parameterType="paragraphBean">
+    <insert id="saveParagraph" parameterType="sectionBean">
         insert into paragraph(sid, content) values (#{synergyId}, #{content})
     </insert>
 
@@ -16,15 +16,15 @@
         select * from synergy
     </select>
     
-    <select id="getParagraph" parameterType="Long" resultType="paragraphBean">
+    <select id="getParagraph" parameterType="Long" resultType="sectionBean">
         select * from paragraph where sid = #{synergyId} order by paragraphId
     </select>
 
-    <select id="getComment" parameterType="Long" resultType="commentBean">
+    <select id="getComment" parameterType="Long" resultType="remarkBean">
         select * from paragraph_comment where paragraphId = #{paragraphId}
     </select>
 
-    <insert id="insertComment" parameterType="commentBean">
+    <insert id="insertComment" parameterType="remarkBean">
         insert into paragraph_comment(synergyId, paragraphId, uid, comment, favor, createTime)
             values (#{synergyId}, #{paragraphId}, #{userId}, #{cotent}, #{favor}, #{createTime})
     </insert>

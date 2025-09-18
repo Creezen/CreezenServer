@@ -1,8 +1,8 @@
 package com.jayce.vexis.controllers
 
-import com.jayce.vexis.entities.history.HistoryBean
-import com.jayce.vexis.entities.history.HistoryDao
+import com.creezen.commontool.bean.HistoryBean
 import com.jayce.vexis.MyDispatchServlet
+import com.jayce.vexis.dao.HistoryDao
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody

@@ -1,4 +1,4 @@
-package com.jayce.vexis.entities.Net;
+package com.jayce.vexis;
 
 import java.util.ArrayList;
 import java.util.List;

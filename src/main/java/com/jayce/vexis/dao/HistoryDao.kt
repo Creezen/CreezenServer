@@ -1,4 +1,6 @@
-package com.jayce.vexis.entities.history
+package com.jayce.vexis.dao
+
+import com.creezen.commontool.bean.HistoryBean
 
 interface HistoryDao {
 

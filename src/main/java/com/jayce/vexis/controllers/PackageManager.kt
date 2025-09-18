@@ -1,8 +1,8 @@
 package com.jayce.vexis.controllers
 
-import com.jayce.vexis.entities.`package`.ApkSimpleInfo
+import com.creezen.commontool.bean.ApkSimpleInfo
 import com.jayce.vexis.MyDispatchServlet
-import com.creezen.commontool.CreezenTool.getRandomString
+import com.creezen.commontool.getRandomString
 import net.dongliu.apk.parser.ApkFile
 import net.dongliu.apk.parser.bean.ApkMeta
 import org.springframework.stereotype.Controller

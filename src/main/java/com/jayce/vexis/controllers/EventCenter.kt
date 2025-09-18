@@ -2,7 +2,7 @@ package com.jayce.vexis.controllers
 
 import com.jayce.vexis.MyDispatchServlet
 import com.jayce.vexis.Tool.workInThread
-import com.jayce.vexis.entities.event.UserSocket
+import com.jayce.vexis.UserSocket
 import org.springframework.stereotype.Component
 import java.net.ServerSocket
 import java.net.Socket

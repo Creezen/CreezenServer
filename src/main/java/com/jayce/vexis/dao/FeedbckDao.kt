@@ -1,4 +1,6 @@
-package com.jayce.vexis.entities.Feedback
+package com.jayce.vexis.dao
+
+import com.creezen.commontool.bean.FeedbackBean
 
 interface FeedbckDao {
 
