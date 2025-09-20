@@ -1,6 +1,8 @@
 package com.jayce.vexis.controllers
 
+import com.creezen.commontool.bean.TransferStatusBean
 import com.creezen.commontool.bean.UserBean
+import com.creezen.commontool.toJson
 import com.jayce.vexis.dao.UserDao
 import com.jayce.vexis.MyDispatchServlet
 import com.jayce.vexis.OnlineSession
@@ -31,13 +33,13 @@ class AccountManage : MyDispatchServlet() {
         response: HttpServletResponse,
         unique: String,
         password: String
-    ): String? {
+    ): TransferStatusBean {
         println("$unique   $password")
-        val sqlSession = sqlSessionFactory.openSession(true) ?: return null
+        val sqlSession = sqlSessionFactory.openSession(true) ?: return status(-2)
         val userDao = sqlSession.getMapper(UserDao::class.java)
         val user = (if (unique.length < 20) userDao.findByName(unique) else userDao.findByID(unique))
-            ?: return getIntJSONString(0)
-        if (user.password != password) return getIntJSONString(1)
+            ?: return status(0)
+        if (user.password != password) return status(1)
         if (!sessionMap.containsKey(unique)) {
             val onlineSession = OnlineSession(firstTimeCookie, session.id)
             onlineSession.loginTime.add(lastTimeCookie)
@@ -49,27 +51,36 @@ class AccountManage : MyDispatchServlet() {
             response.addCookie(Cookie("JSESSIONID", sessionMap[unique]!!.sessionID))
             sessionMap[unique]!!.firstTimeCookie = firstTimeCookie
         }
-        return getJSONString(user)
+        return status(-1, user.toJson())
     }
 
     @RequestMapping(value = ["/register"])
     @ResponseBody
-    fun register(type: String, requestUser: UserBean): String {
-        val session = sqlSessionFactory.openSession(true) ?: return ""
+    fun register(type: String, requestUser: UserBean): TransferStatusBean {
+        val session = sqlSessionFactory.openSession(true) ?: return status(-1)
         val userDao = session.getMapper(UserDao::class.java)
         return if (type == "0") {
             val user = userDao.findByName(requestUser.name)
-            if (user == null) getIntJSONString(0) else getIntJSONString(1)
+            if (user == null) status(0) else status(1)
         } else {
             userDao.registerUser(requestUser)
             userDao.registerActiveData(requestUser.userId)
-            getIntJSONString(2)
+            status(2)
         }
+    }
+
+    @RequestMapping(value = ["/checkInfo"])
+    @ResponseBody
+    fun checkInfo(userName: String): Boolean {
+        val session = sqlSessionFactory.openSession(true) ?: return false
+        val userDao = session.getMapper(UserDao::class.java)
+        val user = userDao.findByName(userName)
+        return (user == null)
     }
 
     @RequestMapping(value = ["/postAvatar"])
     @ResponseBody
-    fun uplaodAvatar(userID: String, file: MultipartFile): String {
+    fun uploadAvatar(userID: String, file: MultipartFile): String {
         //根据web.xml里面的file-size-threshold判断是否要存在磁盘（文件夹下）
         //MultipartFile操作的实际上是临时文件夹下面的文件
         //在请求结束后，这个MultipartFile实例被销毁，临时文件夹被删除
@@ -124,11 +135,8 @@ class AccountManage : MyDispatchServlet() {
         }
     }
 
-    private fun getJSONString(user: UserBean): String {
-        return JSONObject(user).toString()
-    }
-
-    private fun getIntJSONString(flag: Int): String {
-        return JSONObject().put("status", flag).toString()
+    private fun status(code: Int, data: String? = ""): TransferStatusBean {
+        val value = data ?: ""
+        return TransferStatusBean(code, value)
     }
 }

@@ -17,24 +17,22 @@ class FileManager: MyDispatchServlet() {
 
     @RequestMapping(value = ["/fileUpload"])
     @ResponseBody
-    fun upload(@RequestPart("fileEntry") fileBean: FileBean, @RequestPart("file") file: MultipartFile): String {
+    fun upload(@RequestPart("fileEntry") fileBean: FileBean, @RequestPart("file") file: MultipartFile): Int {
         println("${file.originalFilename}   $fileBean")
-        val session = sqlSessionFactory.openSession(true) ?: return ""
+        val session = sqlSessionFactory.openSession(true) ?: return -1
         val mapper = session.getMapper(FileDao::class.java)
         val fileHash = FileHelper.getFileHash(file.inputStream, "SHA256")
         println("file hash: $fileHash")
         val existFile = mapper.findFileByHash(fileHash)
         if (existFile != null) {
             println("file exist")
-            return "-1"
+            return -1
         }
         fileBean.fileHash = fileHash
         val destFile = File("$BASE_FILE_PATH${fileBean.fileID}${fileBean.fileSuffix}")
         file.transferTo(destFile)
         mapper.insertFile(fileBean)
-        return JSONObject().apply {
-            put("loadResult", true)
-        }.toString()
+        return 1
     }
 
     @RequestMapping(value = ["/fileFetch"])

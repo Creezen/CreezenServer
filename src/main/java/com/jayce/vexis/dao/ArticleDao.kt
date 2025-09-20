@@ -12,7 +12,7 @@ interface ArticleDao {
 
     fun getArticle(): List<ArticleBean>
 
-    fun getParagraph(synergyId: Long): List<SectionBean>
+    fun getSections(articleId: Long): List<SectionBean>
 
     fun getComment(paragraphId: Long): List<RemarkBean>
 

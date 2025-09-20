@@ -3,29 +3,29 @@
 
 <mapper namespace="com.jayce.vexis.dao.ArticleDao">
     <insert id="saveArticle" parameterType="articleBean"
-        useGeneratedKeys="true" keyProperty="synergyId">
-        insert into synergy(sUID, title, createTime, updateTime, favor)
-        values (#{sUID}, #{title}, #{createTime}, #{updateTime}, #{favor})
+        useGeneratedKeys="true" keyProperty="articleId">
+        insert into article(userId, title, createTime, updateTime, favor)
+        values (#{userId}, #{title}, #{createTime}, #{updateTime}, #{favor})
     </insert>
     
     <insert id="saveParagraph" parameterType="sectionBean">
-        insert into paragraph(sid, content) values (#{synergyId}, #{content})
+        insert into section(articleId, content) values (#{articleId}, #{content})
     </insert>
 
     <select id="getArticle" resultType="articleBean">
-        select * from synergy
+        select * from article
     </select>
     
-    <select id="getParagraph" parameterType="Long" resultType="sectionBean">
-        select * from paragraph where sid = #{synergyId} order by paragraphId
+    <select id="getSections" parameterType="Long" resultType="sectionBean">
+        select * from section where articleId = #{articleId} order by sectionId
     </select>
 
     <select id="getComment" parameterType="Long" resultType="remarkBean">
-        select * from paragraph_comment where paragraphId = #{paragraphId}
+        select * from remark where sectionId = #{paragraphId}
     </select>
 
     <insert id="insertComment" parameterType="remarkBean">
-        insert into paragraph_comment(synergyId, paragraphId, uid, comment, favor, createTime)
-            values (#{synergyId}, #{paragraphId}, #{userId}, #{cotent}, #{favor}, #{createTime})
+        insert into remark(articleId, sectionId, userId, comment, favor, createTime)
+            values (#{articleId}, #{paragraphId}, #{userId}, #{cotent}, #{favor}, #{createTime})
     </insert>
 </mapper>

@@ -6,6 +6,7 @@ import com.creezen.commontool.bean.SectionBean
 import com.creezen.commontool.bean.SectionRemarkBean
 import com.jayce.vexis.MyDispatchServlet
 import com.jayce.vexis.dao.ArticleDao
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import java.math.BigInteger
 
 @Controller
-class SynergyManager: MyDispatchServlet() {
+class ArticleManager: MyDispatchServlet() {
 
     private val mapper by lazy {
         val session = sqlSessionFactory.openSession(true)
@@ -31,7 +32,7 @@ class SynergyManager: MyDispatchServlet() {
         val session = sqlSessionFactory.openSession(false) ?: return false
         val mapper = session.getMapper(ArticleDao::class.java)
         val article = ArticleBean().apply {
-            this.userID = userID
+            this.userId = userID
             title = articleTitle
             createTime = time
             updateTime = time
@@ -40,7 +41,7 @@ class SynergyManager: MyDispatchServlet() {
         mapper.saveArticle(article)
         paragraphs.forEach {
             val sectionBean = SectionBean().apply {
-                articleId = article.articleID
+                articleId = article.articleId
                 content = it
             }
             mapper.saveParagraph(sectionBean)
@@ -55,12 +56,12 @@ class SynergyManager: MyDispatchServlet() {
         return mapper.getArticle()
     }
 
-    @RequestMapping("getArticleFragment")
+    @RequestMapping("getSection")
     @ResponseBody
-    fun getArticle(synergyId: Long): List<SectionRemarkBean> {
+    fun getSection(articleId: Long): List<SectionRemarkBean> {
         val session = sqlSessionFactory.openSession(false) ?: return arrayListOf()
         val mapper = session.getMapper(ArticleDao::class.java)
-        val paragraphList = mapper.getParagraph(synergyId)
+        val paragraphList = mapper.getSections(articleId)
         val paragraphCommandList = arrayListOf<SectionRemarkBean>()
         paragraphList.forEach {
             val commandList = mapper.getComment(it.sectionId)
@@ -78,14 +79,14 @@ class SynergyManager: MyDispatchServlet() {
     @RequestMapping("postCommen")
     @ResponseBody
     fun postCommen(
-        synergyId: BigInteger,
+        articleId: BigInteger,
         paragraphId: Long,
         userId: String,
         comment: String
     ): Boolean {
         println("receive commen:  $comment")
         mapper.insertComment(RemarkBean(
-            synergyId,
+            articleId,
             paragraphId,
             userId,
             -1,

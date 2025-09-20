@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 class HistoryControll: MyDispatchServlet() {
 
     private val mapper by lazy {
-        sqlSessionFactory.openSession(true)?.getMapper(HistoryDao::class.java)
+        sqlSessionFactory.openSession(true).getMapper(HistoryDao::class.java)
     }
 
     @RequestMapping("/sendEvent")
@@ -24,7 +24,7 @@ class HistoryControll: MyDispatchServlet() {
     @RequestMapping("/queryAllEvent")
     @ResponseBody
     fun queryAllEvent(): List<HistoryBean> {
-        val list = mapper?.queryAllEvent() ?: return listOf()
+        val list = mapper.queryAllEvent()
         return list
     }
 }
