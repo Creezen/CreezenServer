@@ -1,6 +1,7 @@
 package com.jayce.vexis
 
 import com.jayce.vexis.controllers.EventCenter
+import com.jayce.vexis.utils.FileHelper
 import org.apache.ibatis.io.Resources
 import org.apache.ibatis.session.SqlSessionFactory
 import org.apache.ibatis.session.SqlSessionFactoryBuilder
@@ -37,6 +38,7 @@ open class MyDispatchServlet : DispatcherServlet() {
         initRedis(context)
         initSocket(context)
         initProperties()
+        FileHelper.init()
         println("应用全局环境：$applicationContext\n" +
                 "数据连接工厂：$sqlSessionFactory\n" +
                 "事件分发中心：$eventCenter")

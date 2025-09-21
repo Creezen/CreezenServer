@@ -4,6 +4,7 @@ import com.creezen.commontool.bean.FileBean
 import com.jayce.vexis.MyDispatchServlet
 import com.jayce.vexis.dao.FileDao
 import com.jayce.vexis.utils.FileHelper
+import com.jayce.vexis.utils.FileHelper.getFileTypeByFileHead
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -21,8 +22,10 @@ class FileManager: MyDispatchServlet() {
         println("${file.originalFilename}   $fileBean")
         val session = sqlSessionFactory.openSession(true) ?: return -1
         val mapper = session.getMapper(FileDao::class.java)
-        val fileHash = FileHelper.getFileHash(file.inputStream, "SHA256")
-        println("file hash: $fileHash")
+        val filePair = FileHelper.getFileHashAndHead(file.inputStream, "SHA256")
+        val fileHash = filePair.first
+        val fileHead = filePair.second
+        println("file hash: $fileHash   fileHead: $fileHead  fileType: ${getFileTypeByFileHead(fileHead)}")
         val existFile = mapper.findFileByHash(fileHash)
         if (existFile != null) {
             println("file exist")
