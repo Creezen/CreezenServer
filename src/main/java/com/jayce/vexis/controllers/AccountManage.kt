@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.CookieValue
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
@@ -56,17 +57,12 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/register"])
     @ResponseBody
-    fun register(type: String, requestUser: UserBean): TransferStatusBean {
+    fun register(@RequestBody requestUser: UserBean): TransferStatusBean {
         val session = sqlSessionFactory.openSession(true) ?: return status(-1)
         val userDao = session.getMapper(UserDao::class.java)
-        return if (type == "0") {
-            val user = userDao.findByName(requestUser.name)
-            if (user == null) status(0) else status(1)
-        } else {
-            userDao.registerUser(requestUser)
-            userDao.registerActiveData(requestUser.userId)
-            status(2)
-        }
+        userDao.registerUser(requestUser)
+        userDao.registerActiveData(requestUser.userId)
+        return status(2)
     }
 
     @RequestMapping(value = ["/checkInfo"])
