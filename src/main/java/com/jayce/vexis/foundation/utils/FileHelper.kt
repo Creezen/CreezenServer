@@ -1,4 +1,4 @@
-package com.jayce.vexis.utils
+package com.jayce.vexis.foundation.utils
 
 import com.creezen.commontool.Util.loadDataFromYAML
 import java.io.File
@@ -36,7 +36,7 @@ object FileHelper {
     }
 
     fun init() {
-        if (!::fileTypeList.isInitialized) {
+        if (!FileHelper::fileTypeList.isInitialized) {
             fileTypeList = fileTypeMap.keys.toList().sortedWith(compare)
         }
     }

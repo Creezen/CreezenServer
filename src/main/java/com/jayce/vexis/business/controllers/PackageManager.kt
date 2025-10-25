@@ -1,7 +1,7 @@
-package com.jayce.vexis.controllers
+package com.jayce.vexis.business.controllers
 
 import com.creezen.commontool.bean.ApkSimpleInfo
-import com.jayce.vexis.MyDispatchServlet
+import com.jayce.vexis.core.MyDispatchServlet
 import com.creezen.commontool.getRandomString
 import net.dongliu.apk.parser.ApkFile
 import net.dongliu.apk.parser.bean.ApkMeta

@@ -1,7 +1,8 @@
-package com.jayce.vexis
+package com.jayce.vexis.core
 
-import com.jayce.vexis.controllers.EventCenter
-import com.jayce.vexis.utils.FileHelper
+import com.jayce.vexis.foundation.socket.EventCenter
+import com.jayce.vexis.foundation.utils.FileHelper
+import com.jayce.vexis.foundation.utils.RedisUtil
 import org.apache.ibatis.io.Resources
 import org.apache.ibatis.session.SqlSessionFactory
 import org.apache.ibatis.session.SqlSessionFactoryBuilder
@@ -17,8 +18,6 @@ open class MyDispatchServlet : DispatcherServlet() {
         @JvmStatic
         protected lateinit var sqlSessionFactory: SqlSessionFactory
         protected var applicationContext: ApplicationContext? = null
-        @JvmStatic
-        var redisTemplate: StringRedisTemplate? = null
 
         private var baseFilePath: String = ""
         val BASE_FILE_PATH: String
@@ -76,12 +75,13 @@ open class MyDispatchServlet : DispatcherServlet() {
     }
 
     private fun initRedis(context: ApplicationContext) {
-        redisTemplate = context.getBean(StringRedisTemplate::class.java)
+        val redisTemplate = context.getBean(StringRedisTemplate::class.java)
+        RedisUtil.init(redisTemplate)
     }
 
     private fun initSocket(context: ApplicationContext) {
         eventCenter = context.getBean(EventCenter::class.java)
-        eventCenter?.beginSocket()
+        eventCenter?.start()
     }
 
     private fun initProperties() {

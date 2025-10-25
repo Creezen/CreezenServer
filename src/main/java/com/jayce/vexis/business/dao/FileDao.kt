@@ -1,4 +1,4 @@
-package com.jayce.vexis.dao
+package com.jayce.vexis.business.dao
 
 import com.creezen.commontool.bean.FileBean
 

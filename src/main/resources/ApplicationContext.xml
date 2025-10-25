@@ -35,7 +35,7 @@
         <constructor-arg name="port" value="5786"/>
     </bean>
 
-    <bean id="socketManger" class="com.jayce.vexis.controllers.EventCenter">
+    <bean id="socketManger" class="com.jayce.vexis.foundation.socket.EventCenter">
         <constructor-arg name="serverSocket" ref="serverSocket"/>
     </bean>
 

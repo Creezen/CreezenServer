@@ -1,8 +1,8 @@
-package com.jayce.vexis.controllers
+package com.jayce.vexis.business.controllers
 
 import com.creezen.commontool.bean.FeedbackBean
-import com.jayce.vexis.dao.FeedbckDao
-import com.jayce.vexis.MyDispatchServlet
+import com.jayce.vexis.business.dao.FeedbckDao
+import com.jayce.vexis.core.MyDispatchServlet
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping

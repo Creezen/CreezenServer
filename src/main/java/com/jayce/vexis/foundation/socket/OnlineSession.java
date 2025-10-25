@@ -1,4 +1,4 @@
-package com.jayce.vexis;
+package com.jayce.vexis.foundation.socket;
 
 import java.util.ArrayList;
 import java.util.List;

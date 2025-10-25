@@ -1,13 +1,10 @@
-package com.jayce.vexis.controllers
+package com.jayce.vexis.business.controllers
 
 import com.creezen.commontool.bean.PeerAdviceBean
-import com.jayce.vexis.MyDispatchServlet
-import com.jayce.vexis.dao.SeniorDao
+import com.jayce.vexis.core.MyDispatchServlet
+import com.jayce.vexis.business.dao.SeniorDao
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.ModelAttribute
-import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller

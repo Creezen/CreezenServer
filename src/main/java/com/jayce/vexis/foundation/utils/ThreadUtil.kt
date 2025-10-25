@@ -1,13 +1,13 @@
-package com.jayce.vexis
+package com.jayce.vexis.foundation.utils
 
-object Tool {
+object ThreadUtil {
 
     fun workInThread(func: () -> Unit) {
         Thread {
             kotlin.runCatching {
                 func.invoke()
             }.onFailure {
-                println("run catch error: $it")
+                it.printStackTrace()
             }
         }.start()
     }

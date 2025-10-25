@@ -1,10 +1,10 @@
-package com.jayce.vexis.controllers
+package com.jayce.vexis.business.controllers
 
 import com.creezen.commontool.bean.FileBean
-import com.jayce.vexis.MyDispatchServlet
-import com.jayce.vexis.dao.FileDao
-import com.jayce.vexis.utils.FileHelper
-import com.jayce.vexis.utils.FileHelper.getFileTypeByFileHead
+import com.jayce.vexis.core.MyDispatchServlet
+import com.jayce.vexis.business.dao.FileDao
+import com.jayce.vexis.foundation.utils.FileHelper
+import com.jayce.vexis.foundation.utils.FileHelper.getFileTypeByFileHead
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping

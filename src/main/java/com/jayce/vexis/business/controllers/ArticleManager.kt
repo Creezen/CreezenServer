@@ -1,12 +1,11 @@
-package com.jayce.vexis.controllers
+package com.jayce.vexis.business.controllers
 
 import com.creezen.commontool.bean.ArticleBean
 import com.creezen.commontool.bean.RemarkBean
 import com.creezen.commontool.bean.SectionBean
 import com.creezen.commontool.bean.SectionRemarkBean
-import com.jayce.vexis.MyDispatchServlet
-import com.jayce.vexis.dao.ArticleDao
-import jakarta.servlet.http.HttpServletRequest
+import com.jayce.vexis.core.MyDispatchServlet
+import com.jayce.vexis.business.dao.ArticleDao
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam

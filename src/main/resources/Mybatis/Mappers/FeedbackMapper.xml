@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.jayce.vexis.dao.FeedbckDao">
+<mapper namespace="com.jayce.vexis.business.dao.FeedbckDao">
     <insert id="insertFeedback" parameterType="feedbackBean">
         insert into feedback values (#{feedbackID}, #{userID}, #{type}, #{title},
                                      #{content}, #{createTime}, #{support}, #{against})

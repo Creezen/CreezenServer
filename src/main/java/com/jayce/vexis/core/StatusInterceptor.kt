@@ -1,4 +1,4 @@
-package com.jayce.vexis.interceptor
+package com.jayce.vexis.core
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

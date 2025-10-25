@@ -1,11 +1,11 @@
-package com.jayce.vexis.controllers
+package com.jayce.vexis.business.controllers
 
 import com.creezen.commontool.bean.TransferStatusBean
 import com.creezen.commontool.bean.UserBean
 import com.creezen.commontool.toJson
-import com.jayce.vexis.dao.UserDao
-import com.jayce.vexis.MyDispatchServlet
-import com.jayce.vexis.OnlineSession
+import com.jayce.vexis.business.dao.UserDao
+import com.jayce.vexis.core.MyDispatchServlet
+import com.jayce.vexis.foundation.socket.OnlineSession
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
@@ -121,7 +121,7 @@ class AccountManage : MyDispatchServlet() {
                     mapper.deleteUser(userId)
                 }
             }.onFailure {
-                println(it)
+                it.printStackTrace()
                 result = false
             }
             return JSONObject().run {
