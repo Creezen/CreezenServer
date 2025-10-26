@@ -14,11 +14,7 @@ object ThreadUtil {
 
     fun workInThreadBlocked(func: () -> Boolean) {
         workInThread {
-            while (true) {
-                if(func.invoke().not()) {
-                    break
-                }
-            }
+            while (func.invoke()){}
         }
     }
 }

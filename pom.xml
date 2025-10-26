@@ -198,6 +198,12 @@
       </dependency>
 
       <dependency>
+          <groupId>org.jetbrains.kotlinx</groupId>
+          <artifactId>kotlinx-coroutines-core-jvm</artifactId>
+          <version>1.10.2</version>
+      </dependency>
+
+      <dependency>
           <groupId>net.dongliu</groupId>
           <artifactId>apk-parser</artifactId>
           <version>2.5.3</version>
