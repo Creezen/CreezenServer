@@ -26,8 +26,8 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
     private lateinit var writer: BufferedWriter
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val deferred = CompletableDeferred<String>()
 
-    private var userId: String? = null
     var isDied: Boolean = false
     var isFirst: AtomicBoolean = AtomicBoolean(true)
 
@@ -46,8 +46,9 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
         scope.launch {
             while (true) {
                 val line = reader.readLine()
+                println("write line: $line")
                 if (line.isNullOrEmpty()) {
-                    sendFinishMsg()
+                    sendFinishMsg(deferred.await())
                     destroy()
                     continue
                 }
@@ -58,11 +59,10 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
     }
 
     private fun identify(line: String) {
-        if (userId != null) return
         val msg = line.toBean<TelecomBean>()
         if (msg != null && msg.type == Config.EventType.EVENT_TYPE_DEFAULT) {
             RedisUtil.createStreamGroupIfNeed(msg.content)
-            userId = msg.content
+            deferred.complete(msg.content)
             callback.invoke(this@UserSocket, msg.content)
         }
     }
@@ -70,17 +70,19 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
     private fun readMessage() {
         scope.launch {
             while (true) {
-                val currentUserId = userId
-                if (currentUserId == null) {
-                    delay(200)
-                    continue
-                }
+                println("read message")
+                val currentUserId = deferred.await()
                 readStream<String, String>(currentUserId, isFirst).forEach {
+                    println("read line: ${it.value}")
                     val finishMsg = it.value[STREAM_CONTENT_FINISH]
                     if (finishMsg != null) {
-                        ack(currentUserId, it.id)
-                        destroy()
-                        return@launch
+                        if (finishMsg == currentUserId) {
+                            ack(currentUserId, it.id)
+                            destroy()
+                            return@launch
+                        } else {
+                            return@forEach
+                        }
                     }
                     val json = JSONObject(it.value[STREAM_CONTENT_KEY])
                     json.put(STREAM_MESSAGE_ID, it.id)

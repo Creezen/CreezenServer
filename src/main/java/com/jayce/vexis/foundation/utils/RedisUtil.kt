@@ -82,8 +82,8 @@ object RedisUtil {
         streamOpt.add(STREAM_NAME, map)
     }
 
-    fun sendFinishMsg() {
-        val map = mapOf(STREAM_CONTENT_FINISH to "")
+    fun sendFinishMsg(userId: String) {
+        val map = mapOf(STREAM_CONTENT_FINISH to userId)
         streamOpt.add(STREAM_NAME, map)
     }
 
