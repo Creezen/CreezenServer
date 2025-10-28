@@ -46,10 +46,8 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
         scope.launch {
             while (true) {
                 val line = reader.readLine()
-                println("line: $line")
                 if (line.isNullOrEmpty()) {
                     sendFinishMsg()
-                    isDied = true
                     destroy()
                     continue
                 }
@@ -81,6 +79,7 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
                     val finishMsg = it.value[STREAM_CONTENT_FINISH]
                     if (finishMsg != null) {
                         ack(currentUserId, it.id)
+                        destroy()
                         return@launch
                     }
                     val json = JSONObject(it.value[STREAM_CONTENT_KEY])
@@ -95,6 +94,8 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
     }
 
     fun destroy() {
+        if (isDied) return
+        isDied = true
         kotlin.runCatching {
             reader.close()
             writer.close()

@@ -22,16 +22,9 @@ class EventCenter(val serverSocket: ServerSocket) {
 
     private fun operation(socket: Socket) {
         val newSocket = UserSocket(socket) { sock, id ->
-            val cacheSocket = socketMap[id]
-            if (cacheSocket != null) {
-                if (!cacheSocket.isDied) {
-                    cacheSocket.destroy()
-                    socketMap.remove(id)
-                    socketMap[id] = sock
-                } else {
-                    socketMap.remove(id)
-                }
-            }
+            val cacheSocket = socketMap.remove(id)
+            cacheSocket?.destroy()
+            socketMap[id] = sock
         }
         newSocket.init()
     }
