@@ -5,54 +5,35 @@ import com.creezen.commontool.bean.UserBean
 import com.creezen.commontool.toJson
 import com.jayce.vexis.business.dao.UserDao
 import com.jayce.vexis.core.MyDispatchServlet
-import com.jayce.vexis.foundation.socket.OnlineSession
-import jakarta.servlet.http.Cookie
-import jakarta.servlet.http.HttpServletResponse
-import jakarta.servlet.http.HttpSession
+import com.jayce.vexis.foundation.utils.RedisUtil.isUserAlreadyOnline
+import com.jayce.vexis.foundation.utils.RedisUtil.setOnlineStatus
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.CookieValue
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import java.util.*
 
 @Controller
 class AccountManage : MyDispatchServlet() {
 
-    companion object {
-        private val sessionMap: MutableMap<String, OnlineSession> = HashMap()
-    }
-
     @RequestMapping(value = ["/login"])
     @ResponseBody
-    fun login(
-        @CookieValue("firstTime") firstTimeCookie: String,
-        @CookieValue("lastTime") lastTimeCookie: String?,
-        session: HttpSession,
-        response: HttpServletResponse,
-        unique: String,
-        password: String
-    ): TransferStatusBean {
-        println("$unique   $password")
+    fun login(unique: String, password: String): TransferStatusBean {
         val sqlSession = sqlSessionFactory.openSession(true) ?: return status(-2)
         val userDao = sqlSession.getMapper(UserDao::class.java)
         val user = (if (unique.length < 20) userDao.findByName(unique) else userDao.findByID(unique))
             ?: return status(0)
         if (user.password != password) return status(1)
-        if (!sessionMap.containsKey(unique)) {
-            val onlineSession = OnlineSession(firstTimeCookie, session.id)
-            onlineSession.loginTime.add(lastTimeCookie)
-            sessionMap[unique] = onlineSession
-        } else if (firstTimeCookie == sessionMap[unique]!!.firstTimeCookie) {
-            sessionMap[unique]!!.loginTime.add(lastTimeCookie)
-            session.setAttribute(lastTimeCookie, password)
-        } else {
-            response.addCookie(Cookie("JSESSIONID", sessionMap[unique]!!.sessionID))
-            sessionMap[unique]!!.firstTimeCookie = firstTimeCookie
+        if (isUserAlreadyOnline(user.userId)) {
+            return status(-3)
         }
-        return status(-1, user.toJson())
+        val session = UUID.randomUUID().toString()
+        setOnlineStatus(user.userId, session)
+        val userJson = user.copy(session = session).toJson()
+        return status(-1, userJson)
     }
 
     @RequestMapping(value = ["/register"])

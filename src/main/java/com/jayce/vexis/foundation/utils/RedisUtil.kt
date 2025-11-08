@@ -1,7 +1,9 @@
 package com.jayce.vexis.foundation.utils
 
+import com.creezen.commontool.Config.EventType.EVENT_TYPE_FINISH
+import com.creezen.commontool.bean.TelecomBean
+import com.creezen.commontool.toJson
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.springframework.data.redis.connection.stream.Consumer
 import org.springframework.data.redis.connection.stream.MapRecord
@@ -17,6 +19,7 @@ import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.core.ValueOperations
 import org.springframework.data.redis.core.ZSetOperations
 import java.time.Duration
+import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -24,13 +27,12 @@ object RedisUtil {
 
     const val STREAM_MESSAGE_ID = "msgId"
     const val STREAM_CONTENT_KEY = "messageKey"
-    const val STREAM_CONTENT_FINISH = "finishMessage"
-    private const val STREAM_GROUP = "creezen"
     private const val STREAM_CONSUMER = "consumer"
     private const val STREAM_NAME = "telecom"
     private const val STREAM_READ_COUNT = 256L
     private const val STREAM_BLOCK_TIME = 2L
 
+    private lateinit var template: StringRedisTemplate
     private lateinit var stringOpt: ValueOperations<String, String>
     private lateinit var hashOpt: HashOperations<String, Any, Any>
     private lateinit var listOpt: ListOperations<String, String>
@@ -44,6 +46,7 @@ object RedisUtil {
     private val consumerMap: ConcurrentHashMap<String, Consumer> = ConcurrentHashMap()
 
     fun init(redisTemplate: StringRedisTemplate) {
+        template = redisTemplate
         stringOpt = redisTemplate.opsForValue()
         hashOpt = redisTemplate.opsForHash()
         listOpt = redisTemplate.opsForList()
@@ -82,13 +85,47 @@ object RedisUtil {
         streamOpt.add(STREAM_NAME, map)
     }
 
-    fun sendFinishMsg(userId: String) {
-        val map = mapOf(STREAM_CONTENT_FINISH to userId)
-        streamOpt.add(STREAM_NAME, map)
+    fun sendFinishMsg(userId: String, msg: TelecomBean? = null) {
+        val finishJson = TelecomBean(
+            type = EVENT_TYPE_FINISH,
+            userId = userId,
+            nickName = msg?.nickName ?: "",
+            session = msg?.session ?: ""
+        ).toJson()
+        writeStream(finishJson)
     }
 
     fun ack(userId: String, id: RecordId) {
         streamOpt.acknowledge(STREAM_NAME, userId, id)
+    }
+
+    fun setOnlineStatus(userId: String, session: String) {
+        stringOpt.set(userId, session)
+    }
+
+    fun isUserAlreadyOnline(userId: String): Boolean {
+        val session = stringOpt.get(userId)
+        return session != null
+    }
+
+    fun verifyOnlineStatus(msg: TelecomBean): Boolean {
+        val cacheSession = stringOpt.get(msg.userId)
+        println("校验session 缓存：$cacheSession 新：${msg.session}")
+        if (cacheSession == null || cacheSession == msg.session) {
+            return true
+        }
+        return false
+    }
+
+    fun verifyOnlineStatus(userId: String?, session: String?): Boolean {
+        if (userId == null) return false
+        if (session == null) return false
+        val cacheSession = stringOpt.get(userId)
+        return cacheSession == session
+    }
+
+    fun setOfflineStatus(userId: String) {
+        template.delete(userId)
     }
 
 }
