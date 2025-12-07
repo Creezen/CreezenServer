@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
+import java.util.zip.ZipFile
 
 @Controller
 class FileManager: MyDispatchServlet() {
@@ -36,6 +37,33 @@ class FileManager: MyDispatchServlet() {
         file.transferTo(destFile)
         mapper.insertFile(fileBean)
         return 1
+    }
+
+    @RequestMapping(value = ["/aaa"])
+    @ResponseBody
+    fun aaa(): Boolean {
+        val afile = File("C:\\Users\\LJW\\Desktop\\temp")
+        afile.listFiles()?.forEach {
+            val fileHead = FileHelper.getFileHashAndHead(it, "SHA256").second
+            val fileType = getFileTypeByFileHead(fileHead)
+            println("file name: ${it.name}   fileHead: $fileHead  fileType: $fileType")
+            if (fileType == "zip") {
+                isApk(it)
+            }
+        }
+        return true
+    }
+
+    private fun isApk(file: File) {
+        var isApkFile = false
+        ZipFile(file).use {
+            val hasManifest = it.getEntry("AndroidManifest.xml") != null
+            val hasResources = it.getEntry("resources.arsc") != null
+            val hasClasses = it.getEntry("classes.dex") != null
+            println("hasManifest: $hasManifest  hasResources: $hasResources   hasClasses:  $hasClasses")
+            isApkFile = hasManifest && (hasResources || hasClasses)
+        }
+        println("isApk: $isApkFile")
     }
 
     @RequestMapping(value = ["/fileFetch"])
