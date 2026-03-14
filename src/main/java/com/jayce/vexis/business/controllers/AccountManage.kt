@@ -1,5 +1,6 @@
 package com.jayce.vexis.business.controllers
 
+import com.creezen.commontool.bean.ActiveBean
 import com.creezen.commontool.bean.TransferStatusBean
 import com.creezen.commontool.bean.UserBean
 import com.creezen.commontool.toJson
@@ -57,41 +58,31 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/postAvatar"])
     @ResponseBody
-    fun uploadAvatar(userID: String, file: MultipartFile): String {
+    fun uploadAvatar(userID: String, file: MultipartFile): Boolean {
         //根据web.xml里面的file-size-threshold判断是否要存在磁盘（文件夹下）
         //MultipartFile操作的实际上是临时文件夹下面的文件
         //在请求结束后，这个MultipartFile实例被销毁，临时文件夹被删除
         println("$userID  ${file.originalFilename}")
 //        val hash = FileHelper.getFileHash(file.inputStream, "SHA256")
         file.transferTo(File("D:/FileSystem/head/$userID.png"))
-        return JSONObject().run {
-            put("status", true)
-            toString()
-        }
+        return true
     }
 
     @RequestMapping(value = ["/getAllUser"])
     @ResponseBody
-    fun getAllUsers(): String{
-        val session = sqlSessionFactory.openSession(true) ?: return ""
+    fun getAllUsers(): List<ActiveBean> {
+        val session = sqlSessionFactory.openSession(true) ?: return listOf()
         session.use {
             val mapper = it.getMapper(UserDao::class.java)
             val result = mapper.getAllUser()
-            return JSONObject().run {
-                put("userActiveData", result)
-                toString()
-            }
+            return result
         }
     }
 
     @RequestMapping(value = ["/managerUser"])
     @ResponseBody
-    fun manageUser(operation: Int, userId: String): String {
-        val session = sqlSessionFactory.openSession(true)
-            ?: return JSONObject().run {
-                put("operationResult",  false)
-                toString()
-            }
+    fun manageUser(operation: Int, userId: String): Boolean {
+        val session = sqlSessionFactory.openSession(true) ?: return false
         session.use {
             val mapper = it.getMapper(UserDao::class.java)
             var result = true
@@ -105,10 +96,7 @@ class AccountManage : MyDispatchServlet() {
                 it.printStackTrace()
                 result = false
             }
-            return JSONObject().run {
-                put("operationResult", result)
-                toString()
-            }
+            return result
         }
     }
 
