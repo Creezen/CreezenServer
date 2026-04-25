@@ -9,7 +9,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder
 import org.springframework.context.ApplicationContext
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.web.servlet.DispatcherServlet
-import java.io.IOException
 
 open class MyDispatchServlet : DispatcherServlet() {
 
@@ -45,12 +44,10 @@ open class MyDispatchServlet : DispatcherServlet() {
 
     private fun getEnv() {
         val env = System.getenv()["CreezenEnv"]
-        if (env == "LOCAL_MACHINE") {
-            environmentType = 1
-        } else if (env == "CLOUD_MACHINE") {
-            environmentType = 2
-        } else {
-            throw IllegalArgumentException("UNKNOWN MACHINE!!!")
+        environmentType = when (env) {
+            "LOCAL_MACHINE" -> 1
+            "CLOUD_MACHINE" -> 2
+            else -> throw IllegalArgumentException("UNKNOWN MACHINE!!!")
         }
         println("current environment:  $environmentType")
     }
@@ -59,19 +56,10 @@ open class MyDispatchServlet : DispatcherServlet() {
         if (applicationContext == null) {
             applicationContext = context
         }
-        try {
-            val environment = if (isLocalEnvironment()) {
-                "LOCAL"
-            } else {
-                "CLOUD"
-            }
-            println("Mybatis config: $environment")
-            sqlSessionFactory = SqlSessionFactoryBuilder().build(
-                    Resources.getResourceAsStream("Mybatis/MybatisConfig.xml"), environment
-                )
-        } catch (e: IOException) {
-            throw RuntimeException(e)
-        }
+        val environment = if (isLocalEnvironment()) "LOCAL" else "CLOUD"
+        val resourceConfig = "Mybatis/MybatisConfig.xml"
+        println("Mybatis config: $environment  $resourceConfig")
+        sqlSessionFactory = SqlSessionFactoryBuilder().build(Resources.getResourceAsStream(resourceConfig), environment)
     }
 
     private fun initRedis(context: ApplicationContext) {
@@ -85,10 +73,10 @@ open class MyDispatchServlet : DispatcherServlet() {
     }
 
     private fun initProperties() {
-        if (isLocalEnvironment()) {
-            baseFilePath = "D:/FileSystem/"
+        baseFilePath = if (isLocalEnvironment()) {
+            "D:/FileSystem/"
         } else {
-            baseFilePath = "/www/CreezenServer/FileSystem/"
+            "/www/CreezenServer/FileSystem/"
         }
     }
 }

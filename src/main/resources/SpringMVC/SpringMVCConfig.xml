@@ -17,6 +17,8 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/checkVersion"/>
             <mvc:exclude-mapping path="/login"/>
+            <mvc:exclude-mapping path="/checkInfo"/>
+            <mvc:exclude-mapping path="/register"/>
             <bean class="com.jayce.vexis.core.StatusInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
