@@ -3,8 +3,6 @@
 
 <configuration>
 
-    <properties resource="ConfigParamters.properties"/>
-
     <typeAliases>
         <typeAlias type="com.creezen.commontool.bean.UserBean" alias="user"/>
         <typeAlias type="com.creezen.commontool.bean.FileBean" alias="fileBean"/>
@@ -16,28 +14,6 @@
         <typeAlias type="com.creezen.commontool.bean.PeerAdviceBean" alias="peerAdviceBean"/>
         <typeAlias type="com.creezen.commontool.bean.HistoryBean" alias="historyBean"/>
     </typeAliases>
-
-    <environments default="LOCAL">
-        <environment id="LOCAL">
-            <transactionManager type="JDBC"/>
-            <dataSource type="POOLED">
-                <property name="driver" value="${JDBC.driver}"/>
-                <property name="url" value="${JDBC.localUrl}"/>
-                <property name="username" value="${JDBC.username}"/>
-                <property name="password" value="${JDBC.password}"/>
-            </dataSource>
-        </environment>
-
-        <environment id="CLOUD">
-            <transactionManager type="JDBC"/>
-            <dataSource type="POOLED">
-                <property name="driver" value="${JDBC.driver}"/>
-                <property name="url" value="${JDBC.cloudUrl}"/>
-                <property name="username" value="${JDBC.username}"/>
-                <property name="password" value="${JDBC.password}"/>
-            </dataSource>
-        </environment>
-    </environments>
 
     <mappers>
         <mapper resource="Mybatis/Mappers/UserMapper.xml"/>

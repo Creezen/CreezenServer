@@ -27,6 +27,10 @@
     </context-param>
 
     <listener>
+        <listener-class>com.jayce.vexis.core.ProfileListener</listener-class>
+    </listener>
+
+    <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
@@ -63,6 +67,32 @@
 
     <filter-mapping>
         <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>DruidStatView</servlet-name>
+        <servlet-class>com.alibaba.druid.support.jakarta.StatViewServlet</servlet-class>
+        <init-param>
+            <param-name>allow</param-name>
+            <param-value>127.0.0.1</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DruidStatView</servlet-name>
+        <url-pattern>/druid/*</url-pattern>
+    </servlet-mapping>
+    
+    <filter>
+        <filter-name>DruidFilter</filter-name>
+        <filter-class>com.alibaba.druid.support.jakarta.WebStatFilter</filter-class>
+        <init-param>
+            <param-name>exclusions</param-name>
+            <param-value>*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>DruidFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 

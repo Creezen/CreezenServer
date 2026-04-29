@@ -9,6 +9,8 @@
                            http://www.springframework.org/schema/mvc
                            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <context:property-placeholder location="classpath:config.properties"/>
+
     <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
         <property name="maxIdle" value="25"/>
         <property name="maxTotal" value="20"/>
@@ -36,4 +38,42 @@
         <constructor-arg name="serverSocket" ref="serverSocket"/>
     </bean>
 
+    <bean id="baseDruidDataSource" abstract="true" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${JDBC.driver}"/>
+
+        <property name="maxActive" value="${JDBC.maxActive}"/>
+        <property name="minIdle" value="${JDBC.minIdle}"/>
+        <property name="initialSize" value="${JDBC.initialSize}"/>
+        <property name="maxWait" value="${JDBC.maxWait}"/>
+        <property name="testWhileIdle" value="${JDBC.testWhileIdle}"/>
+        <property name="validationQuery" value="${JDBC.validationQuery}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="${JDBC.timeBetweenEvictionRunsMillis}"/>
+        <property name="removeAbandoned" value="${JDBC.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout" value="${JDBC.removeAbandonedTimeout}"/>
+
+        <property name="filters" value="${JDBC.filters}"/>
+    </bean>
+
+    <beans profile="LOCAL">
+        <bean id="druidDataSource" parent="baseDruidDataSource">
+            <property name="url" value="${JDBC.localUrl}"/>
+            <property name="username" value="${JDBC.username}"/>
+            <property name="password" value="${JDBC.password}"/>
+        </bean>
+    </beans>
+
+    <beans profile="CLOUD">
+        <bean id="druidDataSource" parent="baseDruidDataSource">
+            <property name="url" value="${JDBC.cloudUrl}"/>
+            <property name="username" value="${JDBC.username}"/>
+            <property name="password" value="${JDBC.password}"/>
+        </bean>
+    </beans>
+
+    <beans>
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+            <property name="dataSource" ref="druidDataSource"/>
+            <property name="configLocation" value="classpath:Mybatis/MybatisConfig.xml"/>
+        </bean>
+    </beans>
 </beans>
