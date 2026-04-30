@@ -6,6 +6,7 @@ import com.creezen.commontool.bean.SectionBean
 import com.creezen.commontool.bean.SectionRemarkBean
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.business.dao.ArticleDao
+import com.jayce.vexis.foundation.Log
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -14,6 +15,8 @@ import java.math.BigInteger
 
 @Controller
 class ArticleManager: MyDispatchServlet() {
+
+    private val log by lazy { Log(this::class.java) }
 
     private val mapper by lazy {
         val session = sqlSessionFactory.openSession(true)
@@ -83,7 +86,7 @@ class ArticleManager: MyDispatchServlet() {
         userId: String,
         comment: String
     ): Boolean {
-        println("receive commen:  $comment")
+        log.d("receive commen:  $comment")
         mapper.insertComment(RemarkBean(
             articleId,
             paragraphId,

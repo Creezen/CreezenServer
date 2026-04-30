@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="debug">
+    <!--全局属性-->
+    <Properties>
+        <Property name="FILE_PATH">C:/Users/LJW/Desktop/temp/log</Property>
+        <Property name="FORMAT">[%d{yyyy-MM-dd HH:mm:ss.SSS}]{%c{2}}(%L) : %m%n</Property>
+    </Properties>
+
+    <!--配置输出规则-->
+    <Appenders>
+        <!--控制台输出-->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%highlight{${FORMAT}}{FATAL=red, ERROR=red, WARN=yellow, INFO=green, DEBUG=cyan}"/>
+        </Console>
+        <!--滚动文件，主要是为了配置文件名称和自动删除策略-->
+        <!--文件的fileName和filePattern都需要配置上，一个是当前正在写入的文件，一个是归档文件-->
+        <RollingFile name="RollingFile"
+                     fileName="${FILE_PATH}/${date:yyyy-MM-dd}.log"
+                     filePattern="${FILE_PATH}/%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="${FORMAT}"/>
+            <!--配置触发间隔，因为文件名称单位为天，所以每天更新一次-->
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <!--配置删除规则，删除匹配的文件-->
+            <DefaultRolloverStrategy>
+                <Delete basePath="${FILE_PATH}" maxDepth="1">
+                    <IfFileName glob="*.log" />
+                    <IfLastModified age="5d" />
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!--设置各包名的输出级别。级别六个：TRACE、DEBUG、INFO、WARN、ERROR、FATAL-->
+<!--        <Logger name="org.springframework" level="WARN"/>-->
+<!--        <Logger name="org.mybatis.spring" level="WARN"/>-->
+<!--        <Logger name="_org.springframework.web" level="WARN"/>-->
+
+        <!--引用上面Appenders的配置，在这里引用了的才会生效-->
+        <Root level="debug">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</configuration>

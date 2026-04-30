@@ -3,6 +3,7 @@ package com.jayce.vexis.foundation.utils
 import com.creezen.commontool.Config.EventType.EVENT_TYPE_FINISH
 import com.creezen.commontool.bean.TelecomBean
 import com.creezen.commontool.toJson
+import com.jayce.vexis.foundation.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.springframework.data.redis.connection.stream.Consumer
@@ -32,6 +33,8 @@ object RedisUtil {
     private const val STREAM_READ_COUNT = 256L
     private const val STREAM_BLOCK_TIME = 2L
 
+    private val log by lazy { Log(this::class.java) }
+
     private lateinit var template: StringRedisTemplate
     private lateinit var stringOpt: ValueOperations<String, String>
     private lateinit var hashOpt: HashOperations<String, Any, Any>
@@ -59,7 +62,7 @@ object RedisUtil {
         kotlin.runCatching {
             streamOpt.createGroup(STREAM_NAME, ReadOffset.from("0"), userId)
         }.onFailure {
-            println("Group $userId exist!")
+            log.d("Group $userId exist!")
         }
     }
 
@@ -110,7 +113,7 @@ object RedisUtil {
 
     fun verifyOnlineStatus(msg: TelecomBean): Boolean {
         val cacheSession = stringOpt.get(msg.userId)
-        println("校验session 缓存：$cacheSession 新：${msg.session}")
+        log.d("校验session 缓存：$cacheSession 新：${msg.session}")
         if (cacheSession == null || cacheSession == msg.session) {
             return true
         }

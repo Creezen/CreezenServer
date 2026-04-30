@@ -1,5 +1,6 @@
 package com.jayce.vexis.core
 
+import com.jayce.vexis.foundation.Log
 import com.jayce.vexis.foundation.socket.EventCenter
 import com.jayce.vexis.foundation.utils.FileHelper
 import com.jayce.vexis.foundation.utils.RedisUtil
@@ -9,6 +10,8 @@ import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.web.servlet.DispatcherServlet
 
 open class MyDispatchServlet : DispatcherServlet() {
+
+    private val log by lazy { Log(this::class.java) }
 
     companion object {
         private var environmentType: Int = -1
@@ -34,9 +37,9 @@ open class MyDispatchServlet : DispatcherServlet() {
         initSocket(context)
         initProperties()
         FileHelper.init()
-        println("应用全局环境：$applicationContext\n" +
-                "数据连接工厂：$sqlSessionFactory\n" +
-                "事件分发中心：$eventCenter")
+        log.d("应用全局环境：$applicationContext")
+        log.d("数据连接工厂：$sqlSessionFactory")
+        log.d("事件分发中心：$eventCenter")
     }
 
     private fun initMybatis(context: ApplicationContext) {

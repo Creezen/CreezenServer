@@ -6,9 +6,9 @@ import com.creezen.commontool.bean.UserBean
 import com.creezen.commontool.toJson
 import com.jayce.vexis.business.dao.UserDao
 import com.jayce.vexis.core.MyDispatchServlet
+import com.jayce.vexis.foundation.Log
 import com.jayce.vexis.foundation.utils.RedisUtil.isUserAlreadyOnline
 import com.jayce.vexis.foundation.utils.RedisUtil.setOnlineStatus
-import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,6 +19,8 @@ import java.util.*
 
 @Controller
 class AccountManage : MyDispatchServlet() {
+
+    private val log by lazy { Log(this::class.java) }
 
     @RequestMapping(value = ["/login"])
     @ResponseBody
@@ -62,7 +64,7 @@ class AccountManage : MyDispatchServlet() {
         //根据web.xml里面的file-size-threshold判断是否要存在磁盘（文件夹下）
         //MultipartFile操作的实际上是临时文件夹下面的文件
         //在请求结束后，这个MultipartFile实例被销毁，临时文件夹被删除
-        println("$userID  ${file.originalFilename}")
+        log.d("$userID  ${file.originalFilename}")
 //        val hash = FileHelper.getFileHash(file.inputStream, "SHA256")
         file.transferTo(File("D:/FileSystem/head/$userID.png"))
         return true

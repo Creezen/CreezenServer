@@ -3,6 +3,7 @@ package com.jayce.vexis.business.controllers
 import com.creezen.commontool.bean.FeedbackBean
 import com.jayce.vexis.business.dao.FeedbckDao
 import com.jayce.vexis.core.MyDispatchServlet
+import com.jayce.vexis.foundation.Log
 import org.json.JSONObject
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 
 @Controller
 class FeedbackManager: MyDispatchServlet() {
+
+    private val log by lazy { Log(this::class.java) }
 
     private val mapper by lazy {
         sqlSessionFactory?.openSession(true)?.getMapper(FeedbckDao::class.java)
@@ -30,7 +33,7 @@ class FeedbackManager: MyDispatchServlet() {
             0
         )
         mapper?.insertFeedback(feedbackBean)
-        println("$userID  $title  $content  $feedbackBean")
+        log.d("$userID  $title  $content  $feedbackBean")
         return true
     }
 

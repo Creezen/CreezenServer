@@ -4,6 +4,7 @@ import com.creezen.commontool.Config
 import com.creezen.commontool.Config.EventType.EVENT_TYPE_FINISH
 import com.creezen.commontool.bean.TelecomBean
 import com.creezen.commontool.toBean
+import com.jayce.vexis.foundation.Log
 import com.jayce.vexis.foundation.utils.RedisUtil
 import com.jayce.vexis.foundation.utils.RedisUtil.STREAM_CONTENT_KEY
 import com.jayce.vexis.foundation.utils.RedisUtil.STREAM_MESSAGE_ID
@@ -23,6 +24,8 @@ import java.net.Socket
 import java.util.concurrent.atomic.AtomicBoolean
 
 class UserSocket(private val socket: Socket, private val callback: (UserSocket, String) -> Unit) {
+
+    private val log by lazy { Log(this::class.java) }
 
     private lateinit var reader: BufferedReader
     private lateinit var writer: BufferedWriter
@@ -48,7 +51,7 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
         scope.launch {
             while (true) {
                 val line = reader.readLine()
-                println("接收消息： $line")
+                log.d("接收消息： $line")
                 if (line.isNullOrEmpty()) {
                     sendFinishMsg(deferred.await())
                     setOfflineStatus(deferred.await())
@@ -81,7 +84,7 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
             while (true) {
                 val currentUserId = deferred.await()
                 readStream<String, String>(currentUserId, isFirst).forEach {
-                    println("发送消息： ${it.value}")
+                    log.d("发送消息： ${it.value}")
                     val json = JSONObject(it.value[STREAM_CONTENT_KEY])
                     val type = json.optInt("type", -1)
                     val userId = json.optString("userId", "")
