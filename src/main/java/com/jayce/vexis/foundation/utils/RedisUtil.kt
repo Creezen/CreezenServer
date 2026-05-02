@@ -6,21 +6,10 @@ import com.creezen.commontool.toJson
 import com.jayce.vexis.foundation.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.springframework.data.redis.connection.stream.Consumer
-import org.springframework.data.redis.connection.stream.MapRecord
-import org.springframework.data.redis.connection.stream.ReadOffset
-import org.springframework.data.redis.connection.stream.RecordId
-import org.springframework.data.redis.connection.stream.StreamOffset
-import org.springframework.data.redis.connection.stream.StreamReadOptions
-import org.springframework.data.redis.core.HashOperations
-import org.springframework.data.redis.core.ListOperations
-import org.springframework.data.redis.core.SetOperations
-import org.springframework.data.redis.core.StreamOperations
-import org.springframework.data.redis.core.StringRedisTemplate
-import org.springframework.data.redis.core.ValueOperations
-import org.springframework.data.redis.core.ZSetOperations
+import org.springframework.context.ApplicationContext
+import org.springframework.data.redis.connection.stream.*
+import org.springframework.data.redis.core.*
 import java.time.Duration
-import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -30,6 +19,7 @@ object RedisUtil {
     const val STREAM_CONTENT_KEY = "messageKey"
     private const val STREAM_CONSUMER = "consumer"
     private const val STREAM_NAME = "telecom"
+    private const val ONLINE_PREFIX = "ONLINE_"
     private const val STREAM_READ_COUNT = 256L
     private const val STREAM_BLOCK_TIME = 2L
 
@@ -42,20 +32,40 @@ object RedisUtil {
     private lateinit var setOpt: SetOperations<String, String>
     private lateinit var zsetOpt: ZSetOperations<String, String>
     private lateinit var streamOpt: StreamOperations<String, Any, Any>
+    private lateinit var geoOpt: GeoOperations<String, Any>
+    private lateinit var hyperLogOpt: HyperLogLogOperations<String, Any>
+    private lateinit var clusterOpt: ClusterOperations<String, Any>
 
     private val streamOption =  StreamReadOptions.empty().count(STREAM_READ_COUNT).block(Duration.ofMinutes(STREAM_BLOCK_TIME))
     private val streamOffset =  StreamOffset.create(STREAM_NAME, ReadOffset.lastConsumed())
     private val ackStreamOffset = StreamOffset.create(STREAM_NAME, ReadOffset.from("0"))
     private val consumerMap: ConcurrentHashMap<String, Consumer> = ConcurrentHashMap()
 
-    fun init(redisTemplate: StringRedisTemplate) {
+    /**
+     * 所有需要通过aop代理的数据，都需要通过spring管理
+     * 所以除了定义切点之外，还需要定义bean，以及逐一将切点都加进去
+     */
+    fun init(redisTemplate: StringRedisTemplate, context: ApplicationContext) {
+        initOpt(redisTemplate, context)
+        initStatus()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun initOpt(redisTemplate: StringRedisTemplate, context: ApplicationContext) {
         template = redisTemplate
-        stringOpt = redisTemplate.opsForValue()
-        hashOpt = redisTemplate.opsForHash()
-        listOpt = redisTemplate.opsForList()
-        setOpt = redisTemplate.opsForSet()
-        zsetOpt = redisTemplate.opsForZSet()
-        streamOpt = redisTemplate.opsForStream()
+        stringOpt = context.getBean("stringOpt") as ValueOperations<String, String>
+        hashOpt = context.getBean("hashOpt") as HashOperations<String, Any, Any>
+        listOpt = context.getBean("listOpt") as ListOperations<String, String>
+        setOpt = context.getBean("setOpt") as SetOperations<String, String>
+        zsetOpt = context.getBean("zsetOpt") as ZSetOperations<String, String>
+        streamOpt = context.getBean("streamOpt") as StreamOperations<String, Any, Any>
+        geoOpt = context.getBean("geoOpt") as GeoOperations<String, Any>
+        hyperLogOpt = context.getBean("hyperLogOpt") as HyperLogLogOperations<String, Any>
+        clusterOpt =  context.getBean("clusterOpt") as ClusterOperations<String, Any>
+    }
+
+    private fun initStatus() {
+        clearOnlineStatus()
     }
 
     fun createStreamGroupIfNeed(userId: String) {
@@ -103,16 +113,16 @@ object RedisUtil {
     }
 
     fun setOnlineStatus(userId: String, session: String) {
-        stringOpt.set(userId, session)
+        stringOpt.set(getOnlineKey(userId), session)
     }
 
     fun isUserAlreadyOnline(userId: String): Boolean {
-        val session = stringOpt.get(userId)
+        val session = stringOpt.get(getOnlineKey(userId))
         return session != null
     }
 
     fun verifyOnlineStatus(msg: TelecomBean): Boolean {
-        val cacheSession = stringOpt.get(msg.userId)
+        val cacheSession = stringOpt.get(getOnlineKey(msg.userId))
         log.d("校验session 缓存：$cacheSession 新：${msg.session}")
         if (cacheSession == null || cacheSession == msg.session) {
             return true
@@ -123,12 +133,21 @@ object RedisUtil {
     fun verifyOnlineStatus(userId: String?, session: String?): Boolean {
         if (userId == null) return false
         if (session == null) return false
-        val cacheSession = stringOpt.get(userId)
+        val cacheSession = stringOpt.get(getOnlineKey(userId))
         return cacheSession == session
     }
 
     fun setOfflineStatus(userId: String) {
-        template.delete(userId)
+        template.delete(getOnlineKey(userId))
     }
 
+    private fun clearOnlineStatus() {
+        template.keys("*").forEach {
+            if (it.startsWith(ONLINE_PREFIX)) {
+                template.delete(it)
+            }
+        }
+    }
+
+    private fun getOnlineKey(userId: String) = "$ONLINE_PREFIX$userId"
 }

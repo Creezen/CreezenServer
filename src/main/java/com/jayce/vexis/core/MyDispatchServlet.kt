@@ -50,8 +50,8 @@ open class MyDispatchServlet : DispatcherServlet() {
     }
 
     private fun initRedis(context: ApplicationContext) {
-        val redisTemplate = context.getBean(StringRedisTemplate::class.java)
-        RedisUtil.init(redisTemplate)
+        val redisTemplate = context.getBean("stringRedisTemplate") as StringRedisTemplate
+        RedisUtil.init(redisTemplate, context)
     }
 
     private fun initSocket(context: ApplicationContext) {

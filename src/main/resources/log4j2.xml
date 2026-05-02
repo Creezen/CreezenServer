@@ -3,7 +3,7 @@
     <!--全局属性-->
     <Properties>
         <Property name="FILE_PATH">C:/Users/LJW/Desktop/temp/log</Property>
-        <Property name="FORMAT">[%d{yyyy-MM-dd HH:mm:ss.SSS}]{%c{2}}(%L) : %m%n</Property>
+        <Property name="FORMAT">[%d{yyyy-MM-dd HH:mm:ss.SSS}]{%C{1}}(%F:%L) : %m%n</Property>
     </Properties>
 
     <!--配置输出规则-->
@@ -34,6 +34,9 @@
 
     <Loggers>
         <!--设置各包名的输出级别。级别六个：TRACE、DEBUG、INFO、WARN、ERROR、FATAL-->
+        <!--只有不低于设置级别的才会输出-->
+        <Logger name="org.springframework.data.convert.CustomConversions" level="FATAL"/>
+        <Logger name="org.springframework.aop.framework.CglibAopProxy" level="FATAL"/>
 <!--        <Logger name="org.springframework" level="WARN"/>-->
 <!--        <Logger name="org.mybatis.spring" level="WARN"/>-->
 <!--        <Logger name="_org.springframework.web" level="WARN"/>-->

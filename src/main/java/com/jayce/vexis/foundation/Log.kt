@@ -4,10 +4,10 @@ import org.slf4j.LoggerFactory
 import org.slf4j.MarkerFactory
 import org.slf4j.spi.LocationAwareLogger
 
-class Log(private val clazz: Class<*>) {
+class Log(clazz: Class<*>, private val skipString: String? = null) {
 
-    private val className = this::class.java.name
-    private val logger by lazy { LoggerFactory.getLogger(clazz) as LocationAwareLogger }
+    private val FQCN = this::class.java.name
+    private val logger = LoggerFactory.getLogger(clazz) as LocationAwareLogger
 
     fun d(message: String, markerName: String) {
         log(message, LocationAwareLogger.DEBUG_INT, markerName, null)
@@ -59,9 +59,23 @@ class Log(private val clazz: Class<*>) {
 
     private fun log(message: String, level: Int, markerName: String? = null, throwable: Throwable? = null) {
         val marker = markerName?.let { MarkerFactory.getMarker(it) }
-        val displayMessage = if (markerName != null) {
-            "[${markerName}]$message"
-        } else message
-        logger.log(marker, className, level, displayMessage, null, throwable)
+        val displayMessage = if (markerName != null) "[${markerName}]$message" else message
+        val fqcnName = if (skipString != null) findClassName() else FQCN
+        logger.log(marker, fqcnName, level, displayMessage, null, throwable)
+    }
+
+    /**
+     * 找名字，会跳过第一个找到的堆栈类名
+     * 可以先通过Thread.currentThread().stackTrace遍历找到目标方法
+     * 然后取上一行即可
+     */
+    private fun findClassName(): String {
+        Thread.currentThread().stackTrace.forEach {
+            val clzName = it.className
+            if (clzName.contains(skipString ?: FQCN)) {
+                return clzName
+            }
+        }
+        return FQCN
     }
 }

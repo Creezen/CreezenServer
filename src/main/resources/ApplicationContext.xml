@@ -1,13 +1,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context
                            http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/mvc
-                           http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+                           http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <context:property-placeholder location="classpath:config.properties"/>
 
@@ -29,6 +29,15 @@
     <bean id="stringRedisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
         <property name="connectionFactory" ref="jedisConnectionFactory"/>
     </bean>
+    <bean id="stringOpt" factory-bean="stringRedisTemplate" factory-method="opsForValue"/>
+    <bean id="hashOpt" factory-bean="stringRedisTemplate" factory-method="opsForHash"/>
+    <bean id="listOpt" factory-bean="stringRedisTemplate" factory-method="opsForList"/>
+    <bean id="setOpt" factory-bean="stringRedisTemplate" factory-method="opsForSet"/>
+    <bean id="zsetOpt" factory-bean="stringRedisTemplate" factory-method="opsForZSet"/>
+    <bean id="streamOpt" factory-bean="stringRedisTemplate" factory-method="opsForStream"/>
+    <bean id="geoOpt" factory-bean="stringRedisTemplate" factory-method="opsForGeo"/>
+    <bean id="hyperLogOpt" factory-bean="stringRedisTemplate" factory-method="opsForHyperLogLog"/>
+    <bean id="clusterOpt" factory-bean="stringRedisTemplate" factory-method="opsForCluster"/>
 
     <bean id="serverSocket" class="java.net.ServerSocket">
         <constructor-arg name="port" value="5786"/>
@@ -37,6 +46,26 @@
     <bean id="socketManger" class="com.jayce.vexis.foundation.socket.EventCenter">
         <constructor-arg name="serverSocket" ref="serverSocket"/>
     </bean>
+
+    <bean id="redisAspect" class="com.jayce.vexis.foundation.RedisAspect"/>
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+    <aop:config>
+        <aop:pointcut id="redisOperations"
+                      expression="execution(* org.springframework.data.redis.core.RedisOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.ValueOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.HashOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.ListOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.SetOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.ZSetOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.StreamOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.GeoOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.HyperLogLogOperations+.*(..))
+                        or execution(* org.springframework.data.redis.core.ClusterOperations+.*(..))"/>
+
+        <aop:aspect ref="redisAspect">
+            <aop:around method="intercept" pointcut-ref="redisOperations"/>
+        </aop:aspect>
+    </aop:config>
 
     <bean id="baseDruidDataSource" abstract="true" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="driverClassName" value="${JDBC.driver}"/>
