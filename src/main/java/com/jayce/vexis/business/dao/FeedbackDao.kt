@@ -2,7 +2,7 @@ package com.jayce.vexis.business.dao
 
 import com.creezen.commontool.bean.FeedbackBean
 
-interface FeedbckDao {
+interface FeedbackDao {
 
     fun insertFeedback(feedbackBean: FeedbackBean)
 

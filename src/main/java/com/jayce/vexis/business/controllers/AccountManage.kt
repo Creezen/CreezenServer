@@ -9,6 +9,7 @@ import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.foundation.Log
 import com.jayce.vexis.foundation.utils.RedisUtil.isUserAlreadyOnline
 import com.jayce.vexis.foundation.utils.RedisUtil.setOnlineStatus
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -22,11 +23,12 @@ class AccountManage : MyDispatchServlet() {
 
     private val log by lazy { Log(this::class.java) }
 
+    @Autowired
+    lateinit var userDao: UserDao
+
     @RequestMapping(value = ["/login"])
     @ResponseBody
     fun login(unique: String, password: String): TransferStatusBean {
-        val sqlSession = sqlSessionFactory.openSession(true) ?: return status(-2)
-        val userDao = sqlSession.getMapper(UserDao::class.java)
         val user = (if (unique.length < 20) userDao.findByName(unique) else userDao.findByID(unique))
             ?: return status(0)
         if (user.password != password) return status(1)
@@ -42,8 +44,6 @@ class AccountManage : MyDispatchServlet() {
     @RequestMapping(value = ["/register"])
     @ResponseBody
     fun register(@RequestBody requestUser: UserBean): TransferStatusBean {
-        val session = sqlSessionFactory.openSession(true) ?: return status(-1)
-        val userDao = session.getMapper(UserDao::class.java)
         userDao.registerUser(requestUser)
         userDao.registerActiveData(requestUser.userId)
         return status(2)
@@ -52,8 +52,6 @@ class AccountManage : MyDispatchServlet() {
     @RequestMapping(value = ["/checkInfo"])
     @ResponseBody
     fun checkInfo(userName: String): Boolean {
-        val session = sqlSessionFactory.openSession(true) ?: return false
-        val userDao = session.getMapper(UserDao::class.java)
         val user = userDao.findByName(userName)
         return (user == null)
     }
@@ -73,33 +71,24 @@ class AccountManage : MyDispatchServlet() {
     @RequestMapping(value = ["/getAllUser"])
     @ResponseBody
     fun getAllUsers(): List<ActiveBean> {
-        val session = sqlSessionFactory.openSession(true) ?: return listOf()
-        session.use {
-            val mapper = it.getMapper(UserDao::class.java)
-            val result = mapper.getAllUser()
-            return result
-        }
+        return userDao.getAllUser()
     }
 
     @RequestMapping(value = ["/managerUser"])
     @ResponseBody
     fun manageUser(operation: Int, userId: String): Boolean {
-        val session = sqlSessionFactory.openSession(true) ?: return false
-        session.use {
-            val mapper = it.getMapper(UserDao::class.java)
-            var result = true
-            kotlin.runCatching {
-                if (operation == 1){
-                    mapper.setAdmin(userId)
-                } else {
-                    mapper.deleteUser(userId)
-                }
-            }.onFailure {
-                it.printStackTrace()
-                result = false
+        var result = true
+        kotlin.runCatching {
+            if (operation == 1){
+                userDao.setAdmin(userId)
+            } else {
+                userDao.deleteUser(userId)
             }
-            return result
+        }.onFailure {
+            it.printStackTrace()
+            result = false
         }
+        return result
     }
 
     private fun status(code: Int, data: String? = ""): TransferStatusBean {

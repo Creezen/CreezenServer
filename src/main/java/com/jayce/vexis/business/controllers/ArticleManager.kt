@@ -7,7 +7,9 @@ import com.creezen.commontool.bean.SectionRemarkBean
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.business.dao.ArticleDao
 import com.jayce.vexis.foundation.Log
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
@@ -18,21 +20,18 @@ class ArticleManager: MyDispatchServlet() {
 
     private val log by lazy { Log(this::class.java) }
 
-    private val mapper by lazy {
-        val session = sqlSessionFactory.openSession(true)
-        session.getMapper(ArticleDao::class.java)
-    }
+    @Autowired
+    lateinit var articleDao: ArticleDao
 
     @RequestMapping("/postSynergy")
     @ResponseBody
+    @Transactional
     fun saveSynergy(
         articleTitle: String,
         @RequestParam paragraphs: ArrayList<String>,
         userID: String
     ): Boolean {
         val time = System.currentTimeMillis()
-        val session = sqlSessionFactory.openSession(false) ?: return false
-        val mapper = session.getMapper(ArticleDao::class.java)
         val article = ArticleBean().apply {
             this.userId = userID
             title = articleTitle
@@ -40,33 +39,31 @@ class ArticleManager: MyDispatchServlet() {
             updateTime = time
             favor = 0
         }
-        mapper.saveArticle(article)
+        articleDao.saveArticle(article)
         paragraphs.forEach {
             val sectionBean = SectionBean().apply {
                 articleId = article.articleId
                 content = it
             }
-            mapper.saveParagraph(sectionBean)
+            articleDao.saveParagraph(sectionBean)
         }
-        session.commit()
         return true
     }
 
     @RequestMapping("getSynergy")
     @ResponseBody
     fun getSynergy(): List<ArticleBean> {
-        return mapper.getArticle()
+        return articleDao.getArticle()
     }
 
     @RequestMapping("getSection")
     @ResponseBody
+    @Transactional
     fun getSection(articleId: Long): List<SectionRemarkBean> {
-        val session = sqlSessionFactory.openSession(false) ?: return arrayListOf()
-        val mapper = session.getMapper(ArticleDao::class.java)
-        val paragraphList = mapper.getSections(articleId)
+        val paragraphList = articleDao.getSections(articleId)
         val paragraphCommandList = arrayListOf<SectionRemarkBean>()
         paragraphList.forEach {
-            val commandList = mapper.getComment(it.sectionId)
+            val commandList = articleDao.getComment(it.sectionId)
             val paragraphCommandBean = SectionRemarkBean(
                 it.sectionId,
                 it.content,
@@ -74,7 +71,6 @@ class ArticleManager: MyDispatchServlet() {
             )
             paragraphCommandList.add(paragraphCommandBean)
         }
-        session.commit()
         return paragraphCommandList
     }
 
@@ -87,7 +83,7 @@ class ArticleManager: MyDispatchServlet() {
         comment: String
     ): Boolean {
         log.d("receive commen:  $comment")
-        mapper.insertComment(RemarkBean(
+        articleDao.insertComment(RemarkBean(
             articleId,
             paragraphId,
             userId,

@@ -15,8 +15,6 @@ open class MyDispatchServlet : DispatcherServlet() {
 
     companion object {
         private var environmentType: Int = -1
-        @JvmStatic
-        protected lateinit var sqlSessionFactory: SqlSessionFactory
         protected var applicationContext: ApplicationContext? = null
 
         private var baseFilePath: String = ""
@@ -32,21 +30,15 @@ open class MyDispatchServlet : DispatcherServlet() {
 
     override fun initStrategies(context: ApplicationContext) {
         super.initStrategies(context)
-        initMybatis(context)
+        if (applicationContext == null) {
+            applicationContext = context
+        }
         initRedis(context)
         initSocket(context)
         initProperties()
         FileHelper.init()
         log.d("应用全局环境：$applicationContext")
-        log.d("数据连接工厂：$sqlSessionFactory")
         log.d("事件分发中心：$eventCenter")
-    }
-
-    private fun initMybatis(context: ApplicationContext) {
-        if (applicationContext == null) {
-            applicationContext = context
-        }
-        sqlSessionFactory = context.getBean(SqlSessionFactory::class.java)
     }
 
     private fun initRedis(context: ApplicationContext) {
