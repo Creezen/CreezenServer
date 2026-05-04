@@ -72,7 +72,7 @@
         </aop:aspect>
     </aop:config>
 
-    <bean id="baseDruidDataSource" abstract="true" class="com.alibaba.druid.pool.DruidDataSource">
+    <bean id="baseDruidDataSource" abstract="true" class="com.alibaba.druid.pool.DruidDataSource" init-method="init">
         <property name="driverClassName" value="${JDBC.driver}"/>
 
         <property name="maxActive" value="${JDBC.maxActive}"/>
