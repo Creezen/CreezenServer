@@ -73,10 +73,7 @@ class FileManager: MyDispatchServlet() {
 
     @RequestMapping(value = ["/fileFetch"])
     @ResponseBody
-    fun fetch(): String {
-        val resItems = fileDao.getFile()
-        return JSONObject().apply {
-            put("items", resItems)
-        }.toString()
+    fun fetch(): List<FileBean> {
+        return fileDao.getFile()
     }
 }

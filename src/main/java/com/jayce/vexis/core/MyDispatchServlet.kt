@@ -4,7 +4,6 @@ import com.jayce.vexis.foundation.Log
 import com.jayce.vexis.foundation.socket.EventCenter
 import com.jayce.vexis.foundation.utils.FileHelper
 import com.jayce.vexis.foundation.utils.RedisUtil
-import org.apache.ibatis.session.SqlSessionFactory
 import org.springframework.context.ApplicationContext
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.web.servlet.DispatcherServlet
@@ -14,7 +13,6 @@ open class MyDispatchServlet : DispatcherServlet() {
     private val log by lazy { Log(this::class.java) }
 
     companion object {
-        private var environmentType: Int = -1
         protected var applicationContext: ApplicationContext? = null
 
         private var baseFilePath: String = ""
@@ -22,7 +20,8 @@ open class MyDispatchServlet : DispatcherServlet() {
             get() = baseFilePath
 
         fun isLocalEnvironment(): Boolean {
-            return environmentType == 1
+            val env = System.getenv()["CreezenEnv"] ?: "LOCAL"
+            return env == "LOCAL"
         }
     }
 
@@ -33,9 +32,9 @@ open class MyDispatchServlet : DispatcherServlet() {
         if (applicationContext == null) {
             applicationContext = context
         }
+        initProperties()
         initRedis(context)
         initSocket(context)
-        initProperties()
         FileHelper.init()
         log.d("应用全局环境：$applicationContext")
         log.d("事件分发中心：$eventCenter")

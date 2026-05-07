@@ -3,6 +3,7 @@ package com.jayce.vexis.business.controllers
 import com.creezen.commontool.bean.ApkSimpleInfo
 import com.jayce.vexis.core.MyDispatchServlet
 import com.creezen.commontool.getRandomString
+import com.jayce.vexis.foundation.Log
 import net.dongliu.apk.parser.ApkFile
 import net.dongliu.apk.parser.bean.ApkMeta
 import org.springframework.stereotype.Controller
@@ -15,7 +16,9 @@ import java.io.File
 @Controller
 class PackageManager: MyDispatchServlet() {
 
-    private val apkBasePath = "${BASE_FILE_PATH}APK/"
+    private val log by lazy { Log(this::class.java) }
+    private val apkBasePath
+        get() = "${BASE_FILE_PATH}APK/"
 
     @RequestMapping(value = ["/uploadApk"])
     @ResponseBody
@@ -52,6 +55,7 @@ class PackageManager: MyDispatchServlet() {
     fun checkVersion(): ApkSimpleInfo {
         val maxVersion = getMaxVersion()
         val fileDirectory = "${apkBasePath}$maxVersion"
+        log.d("maxversion: $maxVersion $fileDirectory")
         val file = File(fileDirectory).listFiles()?.get(0) ?: return ApkSimpleInfo("0", 0, 0)
         val metaData = resolveApkFile(file)
         val modifyTime = file.lastModified()

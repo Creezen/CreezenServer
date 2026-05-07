@@ -4,7 +4,6 @@ import com.creezen.commontool.bean.FeedbackBean
 import com.jayce.vexis.business.dao.FeedbackDao
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.foundation.Log
-import org.json.JSONObject
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -39,9 +38,7 @@ class FeedbackManager: MyDispatchServlet() {
 
     @RequestMapping("/getFeedback")
     @ResponseBody
-    fun getFeedback(): String {
-        return JSONObject().apply {
-            put("items", feedbackDao.getFeedback())
-        }.toString()
+    fun getFeedback(): List<FeedbackBean> {
+        return feedbackDao.getFeedback()
     }
 }
