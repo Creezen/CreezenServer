@@ -7,16 +7,16 @@ import com.creezen.commontool.bean.SectionRemarkBean
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.business.dao.ArticleDao
 import com.jayce.vexis.foundation.Log
+import java.math.BigInteger
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
-import java.math.BigInteger
 
 @Controller
-class ArticleManager: MyDispatchServlet() {
+class ArticleManager : MyDispatchServlet() {
 
     private val log by lazy { Log(this::class.java) }
 
@@ -29,7 +29,7 @@ class ArticleManager: MyDispatchServlet() {
     fun saveSynergy(
         articleTitle: String,
         @RequestParam paragraphs: ArrayList<String>,
-        userID: String
+        userID: String,
     ): Boolean {
         val time = System.currentTimeMillis()
         val article = ArticleBean().apply {
@@ -52,9 +52,7 @@ class ArticleManager: MyDispatchServlet() {
 
     @RequestMapping("getSynergy")
     @ResponseBody
-    fun getSynergy(): List<ArticleBean> {
-        return articleDao.getArticle()
-    }
+    fun getSynergy(): List<ArticleBean> = articleDao.getArticle()
 
     @RequestMapping("getSection")
     @ResponseBody
@@ -80,7 +78,7 @@ class ArticleManager: MyDispatchServlet() {
         articleId: BigInteger,
         paragraphId: Long,
         userId: String,
-        comment: String
+        comment: String,
     ): Boolean {
         log.d("receive commen:  $comment")
         articleDao.insertComment(RemarkBean(

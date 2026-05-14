@@ -57,7 +57,11 @@ object FileHelper {
         return getFileHashAndHead(file.inputStream(), algorithm, length)
     }
 
-    fun getFileHashAndHead(stream: InputStream, algorithm: String, length: Int = 10): Pair<String, String> {
+    fun getFileHashAndHead(
+        stream: InputStream,
+        algorithm: String,
+        length: Int = 10,
+    ): Pair<String, String> {
         val digest = MessageDigest.getInstance(algorithm)
         val headArray = ByteArray(length)
         var isHeadRead = false
@@ -96,5 +100,4 @@ object FileHelper {
             else -> -1
         }
     }
-
 }

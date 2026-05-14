@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
 import java.io.File
-import java.util.*
+import java.util.UUID
 
 @Controller
 class AccountManage : MyDispatchServlet() {
@@ -28,7 +28,10 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/login"])
     @ResponseBody
-    fun login(unique: String, password: String): TransferStatusBean {
+    fun login(
+        unique: String,
+        password: String,
+    ): TransferStatusBean {
         val user = (if (unique.length < 20) userDao.findByName(unique) else userDao.findByID(unique))
             ?: return status(0)
         if (user.password != password) return status(1)
@@ -43,7 +46,9 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/register"])
     @ResponseBody
-    fun register(@RequestBody requestUser: UserBean): TransferStatusBean {
+    fun register(
+        @RequestBody requestUser: UserBean,
+    ): TransferStatusBean {
         userDao.registerUser(requestUser)
         userDao.registerActiveData(requestUser.userId)
         return status(2)
@@ -58,28 +63,32 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/postAvatar"])
     @ResponseBody
-    fun uploadAvatar(userID: String, file: MultipartFile): Boolean {
-        //根据web.xml里面的file-size-threshold判断是否要存在磁盘（文件夹下）
-        //MultipartFile操作的实际上是临时文件夹下面的文件
-        //在请求结束后，这个MultipartFile实例被销毁，临时文件夹被删除
+    fun uploadAvatar(
+        userID: String,
+        file: MultipartFile,
+    ): Boolean {
+        // 根据web.xml里面的file-size-threshold判断是否要存在磁盘（文件夹下）
+        // MultipartFile操作的实际上是临时文件夹下面的文件
+        // 在请求结束后，这个MultipartFile实例被销毁，临时文件夹被删除
         log.d("$userID  ${file.originalFilename}")
-//        val hash = FileHelper.getFileHash(file.inputStream, "SHA256")
+        //  val hash = FileHelper.getFileHash(file.inputStream, "SHA256")
         file.transferTo(File("D:/FileSystem/head/$userID.png"))
         return true
     }
 
     @RequestMapping(value = ["/getAllUser"])
     @ResponseBody
-    fun getAllUsers(): List<ActiveBean> {
-        return userDao.getAllUser()
-    }
+    fun getAllUsers(): List<ActiveBean> = userDao.getAllUser()
 
     @RequestMapping(value = ["/managerUser"])
     @ResponseBody
-    fun manageUser(operation: Int, userId: String): Boolean {
+    fun manageUser(
+        operation: Int,
+        userId: String,
+    ): Boolean {
         var result = true
         kotlin.runCatching {
-            if (operation == 1){
+            if (operation == 1) {
                 userDao.setAdmin(userId)
             } else {
                 userDao.deleteUser(userId)
@@ -91,7 +100,10 @@ class AccountManage : MyDispatchServlet() {
         return result
     }
 
-    private fun status(code: Int, data: String? = ""): TransferStatusBean {
+    private fun status(
+        code: Int,
+        data: String? = "",
+    ): TransferStatusBean {
         val value = data ?: ""
         return TransferStatusBean(code, value)
     }

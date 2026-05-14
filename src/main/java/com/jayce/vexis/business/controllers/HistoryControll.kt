@@ -16,7 +16,10 @@ class HistoryControll: MyDispatchServlet() {
 
     @RequestMapping("/sendEvent")
     @ResponseBody
-    fun sendEvent(time: String, event: String): Boolean {
+    fun sendEvent(
+        time: String,
+        event: String,
+    ): Boolean {
         historyDao.insertEvent(HistoryBean(time, event))
         return true
     }

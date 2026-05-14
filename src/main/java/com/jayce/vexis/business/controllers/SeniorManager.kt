@@ -27,7 +27,11 @@ class SeniorManager: MyDispatchServlet() {
 
     @RequestMapping("/getAdvice")
     @ResponseBody
-    fun getAdvice(primary: String, second: String, tertiary: String): List<PeerAdviceBean> {
+    fun getAdvice(
+        primary: String,
+        second: String,
+        tertiary: String,
+    ): List<PeerAdviceBean> {
         val query = PeerAdviceBean(primary, second, tertiary, "")
         val list = seniorDao.getAdvice(query)
         return list

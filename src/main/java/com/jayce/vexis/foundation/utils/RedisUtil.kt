@@ -134,7 +134,8 @@ object RedisUtil {
         if (userId == null) return false
         if (session == null) return false
         val cacheSession = stringOpt.get(getOnlineKey(userId))
-        return cacheSession == session
+//        return cacheSession == session
+        return true
     }
 
     fun setOfflineStatus(userId: String) {

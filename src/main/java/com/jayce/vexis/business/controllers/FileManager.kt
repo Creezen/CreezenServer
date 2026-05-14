@@ -26,7 +26,10 @@ class FileManager: MyDispatchServlet() {
 
     @RequestMapping(value = ["/fileUpload"])
     @ResponseBody
-    fun upload(@RequestPart("fileEntry") fileBean: FileBean, @RequestPart("file") file: MultipartFile): Int {
+    fun upload(
+        @RequestPart("fileEntry") fileBean: FileBean,
+        @RequestPart("file") file: MultipartFile,
+    ): Int {
         log.d("${file.originalFilename}   $fileBean")
         val filePair = FileHelper.getFileHashAndHead(file.inputStream, "SHA256")
         val fileHash = filePair.first

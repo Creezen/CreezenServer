@@ -19,7 +19,11 @@ class FeedbackManager: MyDispatchServlet() {
 
     @RequestMapping("/sendFeedback")
     @ResponseBody
-    fun addFeedback(userID: String, title: String, content: String): Boolean {
+    fun addFeedback(
+        userID: String,
+        title: String,
+        content: String,
+    ): Boolean {
         val feedbackBean = FeedbackBean(
             "123",
             "",

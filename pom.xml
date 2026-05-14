@@ -89,6 +89,27 @@
                 <encoding>UTF-8</encoding>
             </configuration>
         </plugin>
+        <plugin>
+            <groupId>com.github.gantsign.maven</groupId>
+            <artifactId>ktlint-maven-plugin</artifactId>
+            <version>3.7.1</version>
+            <executions>
+                <execution>
+                    <id>check</id>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <reporters>
+                    <reporter>
+                        <name>checkstyle</name>
+                        <output>${project.build.directory}/reports/ktlint/ktlint-report.html</output>
+                    </reporter>
+                </reporters>
+            </configuration>
+        </plugin>
     </plugins>
   </build>
 

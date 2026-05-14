@@ -22,7 +22,7 @@ class PackageManager: MyDispatchServlet() {
 
     @RequestMapping(value = ["/uploadApk"])
     @ResponseBody
-    fun uploadApk(@RequestParam("apkFile")  file: MultipartFile): Boolean {
+    fun uploadApk(@RequestParam("apkFile") file: MultipartFile): Boolean {
         val tempName = getRandomString(20)
         val tempPath = "$apkBasePath$tempName.apk"
         val tempFile = File(tempPath)
@@ -80,5 +80,4 @@ class PackageManager: MyDispatchServlet() {
         }
         return maxVersionCode
     }
-
 }
