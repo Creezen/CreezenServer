@@ -85,6 +85,7 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
                 val currentUserId = deferred.await()
                 readStream<String, String>(currentUserId, isFirst).forEach {
                     log.d("发送消息： ${it.value}")
+                    if (it.value.containsKey("finishMessage")) return@forEach
                     val json = JSONObject(it.value[STREAM_CONTENT_KEY])
                     val type = json.optInt("type", -1)
                     val userId = json.optString("userId", "")
@@ -93,7 +94,7 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
                         ack(currentUserId, it.id)
                         if (userId == currentUserId && session.isNotEmpty()) {
                             setOfflineStatus(currentUserId)
-                            val content =  json.toString()
+                            val content = json.toString()
                             write(content)
                             destroy()
                             return@launch
