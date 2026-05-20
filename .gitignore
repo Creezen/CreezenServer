@@ -1,8 +1,8 @@
 target
 .idea
-/src/main/webapp/resources
+/core/src/main/webapp/resources
 Tianji.iml
 Log
-/src/main/webapp/.well-known
-/src/main/webapp/WEB-INF/classes
+/core/src/main/webapp/.well-known
+/core/src/main/webapp/WEB-INF/classes
 /out
