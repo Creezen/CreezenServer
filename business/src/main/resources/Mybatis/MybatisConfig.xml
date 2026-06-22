@@ -4,15 +4,15 @@
 <configuration>
 
     <typeAliases>
-        <typeAlias type="com.creezen.commontool.bean.UserBean" alias="user"/>
-        <typeAlias type="com.creezen.commontool.bean.FileBean" alias="fileBean"/>
-        <typeAlias type="com.creezen.commontool.bean.FeedbackBean" alias="feedbackBean"/>
+        <typeAlias type="com.jayce.vexis.util.bean.UserBean" alias="user"/>
+        <typeAlias type="com.jayce.vexis.util.bean.FileBean" alias="fileBean"/>
+        <typeAlias type="com.jayce.vexis.util.bean.FeedbackBean" alias="feedbackBean"/>
         <typeAlias type="com.creezen.commontool.bean.ActiveBean" alias="activeData"/>
-        <typeAlias type="com.creezen.commontool.bean.ArticleBean" alias="articleBean"/>
-        <typeAlias type="com.creezen.commontool.bean.SectionBean" alias="sectionBean"/>
-        <typeAlias type="com.creezen.commontool.bean.RemarkBean" alias="remarkBean"/>
-        <typeAlias type="com.creezen.commontool.bean.PeerAdviceBean" alias="peerAdviceBean"/>
-        <typeAlias type="com.creezen.commontool.bean.HistoryBean" alias="historyBean"/>
+        <typeAlias type="com.jayce.vexis.util.bean.ArticleBean" alias="articleBean"/>
+        <typeAlias type="com.jayce.vexis.util.bean.SectionBean" alias="sectionBean"/>
+        <typeAlias type="com.jayce.vexis.util.bean.RemarkBean" alias="remarkBean"/>
+        <typeAlias type="com.jayce.vexis.util.bean.PeerAdviceBean" alias="peerAdviceBean"/>
+        <typeAlias type="com.jayce.vexis.util.bean.HistoryBean" alias="historyBean"/>
     </typeAliases>
 
     <mappers>
