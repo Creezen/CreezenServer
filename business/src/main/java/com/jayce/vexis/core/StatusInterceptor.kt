@@ -1,9 +1,9 @@
 package com.jayce.vexis.core
 
-import com.creezen.commontool.Config.COOKIE_USER_ID
-import com.creezen.commontool.Config.COOKIE_UUID
-import com.creezen.commontool.bean.TransferStatusBean
-import com.creezen.commontool.toJson
+import com.jayce.vexis.util.Config.COOKIE_USER_ID
+import com.jayce.vexis.util.Config.COOKIE_UUID
+import com.jayce.vexis.util.bean.TransferStatusBean
+import com.jayce.vexis.util.toJson
 import com.jayce.vexis.foundation.utils.RedisUtil.verifyOnlineStatus
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

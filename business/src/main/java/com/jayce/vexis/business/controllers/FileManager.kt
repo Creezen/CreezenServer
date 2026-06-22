@@ -1,6 +1,6 @@
 package com.jayce.vexis.business.controllers
 
-import com.creezen.commontool.bean.FileBean
+import com.jayce.vexis.util.bean.FileBean
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.business.dao.FileDao
 import com.jayce.vexis.foundation.Log

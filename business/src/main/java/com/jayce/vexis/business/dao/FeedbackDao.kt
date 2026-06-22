@@ -1,6 +1,6 @@
 package com.jayce.vexis.business.dao
 
-import com.creezen.commontool.bean.FeedbackBean
+import com.jayce.vexis.util.bean.FeedbackBean
 
 interface FeedbackDao {
 

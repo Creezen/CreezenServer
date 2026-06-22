@@ -1,6 +1,6 @@
 package com.jayce.vexis.foundation.utils
 
-import com.creezen.commontool.Util.loadDataFromYAML
+import com.jayce.vexis.util.Util.loadDataFromYAML
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest

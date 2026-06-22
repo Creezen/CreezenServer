@@ -1,6 +1,6 @@
 package com.jayce.vexis.business.dao
 
-import com.creezen.commontool.bean.FileBean
+import com.jayce.vexis.util.bean.FileBean
 
 interface FileDao {
 

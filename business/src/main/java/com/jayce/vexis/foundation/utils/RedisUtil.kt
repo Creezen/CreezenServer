@@ -1,8 +1,8 @@
 package com.jayce.vexis.foundation.utils
 
-import com.creezen.commontool.Config.EVENT_TYPE_EXIT
-import com.creezen.commontool.bean.TelecomBean
-import com.creezen.commontool.toJson
+import com.jayce.vexis.util.Config.EVENT_TYPE_EXIT
+import com.jayce.vexis.util.bean.TelecomBean
+import com.jayce.vexis.util.toJson
 import com.jayce.vexis.foundation.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

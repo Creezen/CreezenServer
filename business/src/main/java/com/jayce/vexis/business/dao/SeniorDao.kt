@@ -1,6 +1,6 @@
 package com.jayce.vexis.business.dao
 
-import com.creezen.commontool.bean.PeerAdviceBean
+import com.jayce.vexis.util.bean.PeerAdviceBean
 
 interface SeniorDao {
     fun addAdvice(peerAdviceBean: PeerAdviceBean)

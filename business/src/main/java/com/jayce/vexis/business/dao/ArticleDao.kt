@@ -1,8 +1,8 @@
 package com.jayce.vexis.business.dao
 
-import com.creezen.commontool.bean.ArticleBean
-import com.creezen.commontool.bean.RemarkBean
-import com.creezen.commontool.bean.SectionBean
+import com.jayce.vexis.util.bean.ArticleBean
+import com.jayce.vexis.util.bean.RemarkBean
+import com.jayce.vexis.util.bean.SectionBean
 
 interface ArticleDao {
 

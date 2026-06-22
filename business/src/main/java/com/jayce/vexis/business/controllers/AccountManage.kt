@@ -1,9 +1,9 @@
 package com.jayce.vexis.business.controllers
 
-import com.creezen.commontool.bean.ActiveBean
-import com.creezen.commontool.bean.TransferStatusBean
-import com.creezen.commontool.bean.UserBean
-import com.creezen.commontool.toJson
+import com.jayce.vexis.util.bean.ActiveBean
+import com.jayce.vexis.util.bean.TransferStatusBean
+import com.jayce.vexis.util.bean.UserBean
+import com.jayce.vexis.util.toJson
 import com.jayce.vexis.business.dao.UserDao
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.foundation.Log

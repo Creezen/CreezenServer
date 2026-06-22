@@ -1,6 +1,6 @@
 package com.jayce.vexis.business.controllers
 
-import com.creezen.commontool.bean.FeedbackBean
+import com.jayce.vexis.util.bean.FeedbackBean
 import com.jayce.vexis.business.dao.FeedbackDao
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.foundation.Log

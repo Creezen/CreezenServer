@@ -1,7 +1,7 @@
 package com.jayce.vexis.business.dao
 
-import com.creezen.commontool.bean.ActiveBean
-import com.creezen.commontool.bean.UserBean
+import com.jayce.vexis.util.bean.ActiveBean
+import com.jayce.vexis.util.bean.UserBean
 
 interface UserDao {
 

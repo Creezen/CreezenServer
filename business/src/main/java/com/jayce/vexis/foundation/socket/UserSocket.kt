@@ -1,9 +1,9 @@
 package com.jayce.vexis.foundation.socket
 
-import com.creezen.commontool.Config.EVENT_TYPE_DEFAULT
-import com.creezen.commontool.Config.EVENT_TYPE_EXIT
-import com.creezen.commontool.bean.TelecomBean
-import com.creezen.commontool.toBean
+import com.jayce.vexis.util.Config.EVENT_TYPE_DEFAULT
+import com.jayce.vexis.util.Config.EVENT_TYPE_EXIT
+import com.jayce.vexis.util.bean.TelecomBean
+import com.jayce.vexis.util.toBean
 import com.jayce.vexis.foundation.Log
 import com.jayce.vexis.foundation.utils.RedisUtil
 import com.jayce.vexis.foundation.utils.RedisUtil.STREAM_CONTENT_KEY

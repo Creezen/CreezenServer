@@ -1,9 +1,9 @@
 package com.jayce.vexis.business.controllers
 
-import com.creezen.commontool.bean.ArticleBean
-import com.creezen.commontool.bean.RemarkBean
-import com.creezen.commontool.bean.SectionBean
-import com.creezen.commontool.bean.SectionRemarkBean
+import com.jayce.vexis.util.bean.ArticleBean
+import com.jayce.vexis.util.bean.RemarkBean
+import com.jayce.vexis.util.bean.SectionBean
+import com.jayce.vexis.util.bean.SectionRemarkBean
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.business.dao.ArticleDao
 import com.jayce.vexis.foundation.Log

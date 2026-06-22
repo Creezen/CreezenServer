@@ -1,6 +1,6 @@
 package com.jayce.vexis.business.controllers
 
-import com.creezen.commontool.bean.HistoryBean
+import com.jayce.vexis.util.bean.HistoryBean
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.business.dao.HistoryDao
 import org.springframework.beans.factory.annotation.Autowired
