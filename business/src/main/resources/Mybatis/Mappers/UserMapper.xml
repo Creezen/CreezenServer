@@ -48,4 +48,16 @@
     <update id="setAdmin" parameterType="String">
         update user_count set adminLevel = 1 where userid = #{userId}
     </update>
+    
+    <insert id="followUser">
+        insert into relation values (#{userId}, #{fansId}, #{relation})
+    </insert>
+
+    <insert id="updateRelation" parameterType="String">
+        update active_index set fans = fans + 1 where userid = #{userId}
+    </insert>
+
+    <select id="queryRelation" resultType="int">
+        select count(*) from relation where userid = #{userId} and fansid = #{fansId}
+    </select>
 </mapper>

@@ -331,5 +331,41 @@ typeMap:
     - "arc"
   "2d2d2d2d2d424547494e20504750205055424c4943204b454920424c4f434b2d2d2d2d2d":
     - "arc"
-  "aaaaaaaa":
-    - "sys"
+  "EFBBBF":
+    - "txt"
+  "FFFE":
+    - "txt"
+  "FEFF":
+    - "txt"
+  "0000FEFF":
+    - "txt"
+  "3C3F786D6C":
+    - "xml"
+  "3C737667":
+    - "svg"
+  "3C3F786D6C207665":
+    - "xml"
+  "7B22":
+    - "json"
+  "5B7B":
+    - "json"
+  "3C21444F":
+    - "html"
+  "3C68746D6C":
+    - "html"
+  "2321":
+    - "script"
+  "3C21444F4354595045":
+    - "html"
+  "3C68656164":
+    - "html"
+  "3C626F6479":
+    - "html"
+  "3C6C696E6B":
+    - "html"
+  "3C6D657461":
+    - "html"
+  "3C646976":
+    - "html"
+  "3C707265":
+    - "html"

@@ -15,7 +15,7 @@ fun getRandomString(length: Int) : String {
     val random = Random()
     val buffer = StringBuffer()
     for (i in 0 until length) {
-        buffer.append(BASIC_LETTER[random.nextInt(52)])
+        buffer.append(BASIC_LETTER[random.nextInt(62)])
     }
     return buffer.toString()
 }

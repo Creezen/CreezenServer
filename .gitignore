@@ -6,3 +6,4 @@ Log
 /core/src/main/webapp/.well-known
 /core/src/main/webapp/WEB-INF/classes
 /out
+/business/src/main/webapp/web

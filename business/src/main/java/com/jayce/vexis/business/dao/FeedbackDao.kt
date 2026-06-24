@@ -8,5 +8,5 @@ interface FeedbackDao {
 
     fun getFeedback(): List<FeedbackBean>
 
-    fun supportFeedback(feedbackId: String)
+    fun supportFeedback(feedbackId: String, count: Int)
 }

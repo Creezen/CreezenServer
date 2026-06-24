@@ -1,11 +1,21 @@
 package com.jayce.vexis.foundation.utils
 
-import com.jayce.vexis.util.Util.loadDataFromYAML
+import com.jayce.vexis.core.MyDispatchServlet.Companion.BASE_FILE_PATH
+import com.jayce.vexis.foundation.Log
+import com.jayce.vexis.util.bean.FileType
+import org.yaml.snakeyaml.LoaderOptions
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.Constructor
 import java.io.File
 import java.io.InputStream
 import java.security.MessageDigest
+import java.util.zip.ZipFile
+import java.util.zip.ZipInputStream
+import kotlin.math.min
 
 object FileHelper {
+
+    private val log by lazy { Log(this::class.java) }
 
     private var _fileMap: Map<String, List<String>>? = null
 
@@ -41,44 +51,102 @@ object FileHelper {
         }
     }
 
-    fun getFileTypeByFileHead(fileHead: String): String {
-        for (i in fileTypeList.indices) {
-            if (fileHead.length < fileTypeList[i].length) {
-                continue
-            }
-            if (fileHead.startsWith(fileTypeList[i])) {
-                return fileTypeMap[fileTypeList[i]]?.first() ?: ""
-            }
-        }
-        return ""
-    }
-
-    fun getFileHashAndHead(file: File, algorithm: String, length: Int = 10): Pair<String, String> {
-        return getFileHashAndHead(file.inputStream(), algorithm, length)
-    }
-
-    fun getFileHashAndHead(
-        stream: InputStream,
-        algorithm: String,
-        length: Int = 10,
-    ): Pair<String, String> {
+    fun getFileHashAndType(file: File, algorithm: String, length: Int = 1024): Pair<String, String> {
         val digest = MessageDigest.getInstance(algorithm)
         val headArray = ByteArray(length)
         var isHeadRead = false
-        stream.use {
-            val buffer = ByteArray(1 * 1024 * 1024)
+        var readLength = 0
+        file.inputStream().use { stream ->
+            val buffer = ByteArray(1024 * 1024)
             var contentSize: Int
             while (stream.read(buffer).also { contentSize = it } != -1) {
                 if (!isHeadRead) {
-                    buffer.copyInto(headArray, 0, 0, length)
+                    readLength = min(contentSize, length)
+                    buffer.copyInto(headArray, 0, 0, readLength)
                     isHeadRead = true
                 }
                 digest.update(buffer, 0, contentSize)
             }
         }
         val digestValue = digest.digest().joinToString("") { "%02x".format(it) }
-        val headValue = byteToString(headArray)
-        return digestValue to headValue
+        val headValue = byteToString(headArray.copyOfRange(0, readLength))
+        val fileType = getFileTypeByFileHead(file, headValue)
+        return digestValue to fileType
+    }
+
+    fun getFileTypeByFileHead(file: File, fileHead: String): String {
+        for (i in fileTypeList.indices) {
+            val typeIndicator = fileTypeList[i]
+            if (fileHead.length < typeIndicator.length) {
+                continue
+            }
+            if (fileHead.startsWith(typeIndicator)) {
+                var type = fileTypeMap[typeIndicator]?.first()
+                if (type == "zip") {
+                    if (isApk(file)) {
+                        type = "apk"
+                    }
+                }
+                return type ?: ""
+            }
+        }
+        return ""
+    }
+
+    fun isApk(file: File): Boolean {
+        var isApkFile: Boolean
+        ZipFile(file).use {
+            val hasManifest = it.getEntry("AndroidManifest.xml") != null
+            val hasResources = it.getEntry("resources.arsc") != null
+            val hasClasses = it.getEntry("classes.dex") != null
+            isApkFile = hasManifest && (hasResources || hasClasses)
+        }
+        return isApkFile
+    }
+
+    fun isApk(stream: InputStream): Boolean {
+        ZipInputStream(stream).use { zip ->
+            var entry = zip.nextEntry
+            var hasManifest = false
+            var hasResource = false
+            var hasClasses = false
+            while (entry != null) {
+                when (entry.name) {
+                    "AndroidManifest.xml" -> hasManifest = true
+                    "resources.arsc" -> hasResource = true
+                    "classes.dex" -> hasClasses = true
+                }
+                if (hasManifest && (hasResource || hasClasses)) {
+                    return true
+                }
+                entry = zip.nextEntry
+            }
+        }
+        return false
+    }
+
+    fun tempFile(): File {
+        val tempDirectory = File("$BASE_FILE_PATH/temp/")
+        if (tempDirectory.exists().not()) tempDirectory.mkdirs()
+        val tempFile = File(tempDirectory, "${System.currentTimeMillis()}")
+        tempFile.createNewFile()
+        return tempFile
+    }
+
+    private fun loadDataFromYAML(): Map<String, List<String>> {
+        kotlin.runCatching {
+            val yaml = Yaml(Constructor(LoaderOptions()))
+            val source = "fileType.yaml"
+            javaClass.classLoader.getResourceAsStream(source)?.use {
+                val values = yaml.loadAs(it, FileType::class.java)
+                return values.typeMap
+            } ?: run {
+                println("stream is empty")
+            }
+        }.onFailure {
+            println("fail ${it.message}")
+        }
+        return mapOf()
     }
 
     private fun byteToString(byteArray: ByteArray): String {

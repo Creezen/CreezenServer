@@ -47,9 +47,8 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/register"])
     @ResponseBody
-    fun register(
-        @RequestBody requestUser: UserBean,
-    ): TransferStatusBean {
+    fun register(@RequestBody requestUser: UserBean): TransferStatusBean {
+        log.d("user: $requestUser")
         userDao.registerUser(requestUser)
         userDao.registerActiveData(requestUser.userId)
         return status(2)
@@ -57,12 +56,12 @@ class AccountManage : MyDispatchServlet() {
 
     @RequestMapping(value = ["/checkInfo"])
     @ResponseBody
-    fun checkInfo(name: String): Boolean {
-        val state = RedisUtil.queryUser(name)
+    fun checkInfo(userName: String): Boolean {
+        val state = RedisUtil.queryUser(userName)
         if (state != null) return state == "1"
-        val user = userDao.findByName(name)
-        val status = if (user == null) 0 else 1
-        RedisUtil.saveUser(name, status.toString())
+        val user = userDao.findByName(userName)
+        val status = if (user == null) "0" else "1"
+        RedisUtil.saveUser(userName, status)
         return (user == null)
     }
 
@@ -97,6 +96,17 @@ class AccountManage : MyDispatchServlet() {
     fun deleteUser(userId: String): Boolean {
         userDao.deleteUser(userId)
         return true
+    }
+
+    @RequestMapping(value = ["/followUser"])
+    @ResponseBody
+    fun followUser(fansId: String, userId: String): Int {
+        val fansCount = userDao.queryRelation(userId, fansId)
+        if (fansCount > 0) return -1
+        val status = userDao.followUser(userId, fansId, 0)
+        if (!status) return 0
+        userDao.updateRelation(userId)
+        return 1
     }
 
     private fun status(

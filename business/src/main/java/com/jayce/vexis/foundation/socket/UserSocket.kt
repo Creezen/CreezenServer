@@ -119,13 +119,13 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
             writer.close()
             socket.close()
         }.onFailure {
-            it.printStackTrace()
+            log.e("socket destroy: ${it.message}")
         }
 
         kotlin.runCatching {
             scope.cancel()
         }.onFailure {
-            it.printStackTrace()
+            log.e("scope cancel: ${it.message}")
         }
     }
 
@@ -134,7 +134,7 @@ class UserSocket(private val socket: Socket, private val callback: (UserSocket, 
             writer.write("$content\n")
             writer.flush()
         }.onFailure {
-            it.printStackTrace()
+            log.d("socket write error: ${it.message}")
         }
     }
 }

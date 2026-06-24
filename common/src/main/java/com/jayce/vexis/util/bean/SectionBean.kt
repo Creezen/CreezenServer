@@ -1,10 +1,9 @@
 package com.jayce.vexis.util.bean
 
-import com.jayce.vexis.util.Config.LONG_ZERO
-import com.jayce.vexis.util.Config.NIL
-
 data class SectionBean (
-    var sectionId: Long = LONG_ZERO,
-    var articleId: Long = LONG_ZERO,
-    var content: String = NIL
+    val articleId: Long,
+    val sectionId: Long,
+    val orderId: Int,
+    val type: Int,
+    val content: String
 )

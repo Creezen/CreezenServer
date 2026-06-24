@@ -4,6 +4,7 @@ import com.jayce.vexis.util.bean.ApkSimpleInfo
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.util.getRandomString
 import com.jayce.vexis.foundation.Log
+import com.jayce.vexis.util.bean.ApkInfoBean
 import net.dongliu.apk.parser.ApkFile
 import net.dongliu.apk.parser.bean.ApkMeta
 import org.springframework.stereotype.Controller
@@ -20,34 +21,36 @@ class PackageManager: MyDispatchServlet() {
     private val apkBasePath
         get() = "${BASE_FILE_PATH}APK/"
 
-    @RequestMapping(value = ["/uploadApk"])
+    @RequestMapping(value = ["/checkApkInfo"])
     @ResponseBody
-    fun uploadApk(@RequestParam("apkFile") file: MultipartFile): Boolean {
+    fun checkApkInfo(@RequestParam("apkFile") file: MultipartFile): ApkInfoBean {
         val tempName = getRandomString(20)
         val tempPath = "$apkBasePath$tempName.apk"
         val tempFile = File(tempPath)
         file.transferTo(tempFile)
-        try {
-            val metaData = resolveApkFile(tempFile)
-            val versionName = metaData.versionName
-            val versionCode = metaData.versionCode
-            val destFile = File("$apkBasePath$versionCode")
-            if (destFile.exists().not()) {
-                if (versionCode <= getMaxVersion()) {
-                    tempFile.delete()
-                    return false
-                }
-                destFile.mkdir()
-                tempFile.copyTo(File("${destFile.path}/$versionName.apk"))
-                tempFile.delete()
-                return true
-            } else {
-                tempFile.delete()
-                return false
-            }
-        } finally {
-            tempFile.delete()
-        }
+        val metaData = resolveApkFile(tempFile)
+        val versionName = metaData.versionName
+        val versionCode = metaData.versionCode
+        val fileSize_M = (tempFile.length() / 1024 / 1024)
+        val fileSize = "$fileSize_M M"
+        log.d("versionName: $versionName  versionCode: $versionCode")
+        tempFile.delete()
+        return ApkInfoBean(versionCode, versionName, fileSize)
+    }
+
+    @RequestMapping(value = ["/uploadApk"])
+    @ResponseBody
+    fun uploadApk(
+        @RequestParam("versionCode") versionCode: Long,
+        @RequestParam("versionName") versionName: String,
+        @RequestParam("apkFile") file: MultipartFile
+    ): String {
+        val destFile = File("$apkBasePath$versionCode")
+        if (destFile.exists()) return "文件已存在"
+        if (versionCode <= getMaxVersion()) return "APK版本号过低"
+        destFile.mkdir()
+        file.transferTo(File("${destFile.path}/$versionName.apk"))
+        return "文件上传成功"
     }
 
     @RequestMapping(value = ["/checkVersion"])

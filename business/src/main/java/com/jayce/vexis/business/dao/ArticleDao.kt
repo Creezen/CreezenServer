@@ -8,13 +8,15 @@ interface ArticleDao {
 
     fun saveArticle(articleBean: ArticleBean)
 
-    fun saveParagraph(sectionBean: SectionBean)
+    fun saveSection(sectionBean: SectionBean)
 
     fun getArticle(): List<ArticleBean>
 
     fun getSections(articleId: Long): List<SectionBean>
 
-    fun getComment(paragraphId: Long): List<RemarkBean>
+    fun getRemark(sectionId: Long): List<RemarkBean>
 
-    fun insertComment(remarkBean: RemarkBean)
+    fun insertRemark(remarkBean: RemarkBean)
+
+    fun deleteArticle(articleId: Long)
 }

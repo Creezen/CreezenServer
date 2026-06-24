@@ -1,9 +1,9 @@
 package com.jayce.vexis.util.bean
 
-import com.jayce.vexis.util.bean.RemarkBean
-
 data class SectionRemarkBean(
+    val articleId: Long,
     val sectionId: Long,
+    val type : Int,
     val content: String,
     val list: List<RemarkBean>,
 )

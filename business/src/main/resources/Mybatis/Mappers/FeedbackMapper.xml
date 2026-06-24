@@ -3,18 +3,16 @@
 
 <mapper namespace="com.jayce.vexis.business.dao.FeedbackDao">
     <insert id="insertFeedback" parameterType="feedbackBean">
-        insert into feedback values (#{feedbackID}, #{userID}, #{type}, #{title},
+        insert into feedback values (#{feedbackID}, #{userName}, #{userID}, #{type}, #{title},
                                      #{content}, #{createTime}, #{support}, #{against})
     </insert>
 
     <select id="getFeedback" resultType="feedbackBean">
-        select feedbackID, u.nickname userName, f.userID, type, title,
-               content, f.createTime, support, against
-               from feedback f, user_count u where u.userid = f.userID
+        select * from feedback
     </select>
 
-    <update id="supportFeedback" parameterType="string">
-        update feedback set support = support + 1 where feedbackID = #{feedbackId}
+    <update id="supportFeedback">
+        update feedback set support = support + #{count} where feedbackID = #{feedbackId}
     </update>
 
 </mapper>

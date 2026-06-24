@@ -5,7 +5,7 @@ object Config {
     const val ZERO = 0
     const val LONG_ZERO = 0L
     const val NIL = ""
-    const val BASIC_LETTER = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+    const val BASIC_LETTER = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 
     const val EVENT_TYPE_DEFAULT = 0
     const val EVENT_TYPE_CHAT = 1

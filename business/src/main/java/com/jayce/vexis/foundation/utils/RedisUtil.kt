@@ -144,11 +144,21 @@ object RedisUtil {
     }
 
     fun saveUser(name: String, status: String) {
-        stringOpt.set(name, "1")
+        stringOpt.set(name, status)
     }
 
     fun queryUser(name: String): String? {
         return stringOpt.get(name)
+    }
+
+    fun feedbackSupport(userId: String, feedbackId: String) {
+        val feedbackKey = getFeedbackKey(userId, feedbackId)
+        stringOpt.set(feedbackKey, "1")
+    }
+
+    fun removeSupportFeedback(userId: String, feedbackId: String): Boolean {
+        val feedbackKey = getFeedbackKey(userId, feedbackId)
+        return template.delete(feedbackKey)
     }
 
     private fun clearOnlineStatus() {
@@ -160,4 +170,6 @@ object RedisUtil {
     }
 
     private fun getOnlineKey(userId: String) = "$ONLINE_PREFIX$userId"
+
+    private fun getFeedbackKey(userId: String, feedbackId: String) = "$userId$feedbackId"
 }

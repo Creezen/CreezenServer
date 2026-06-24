@@ -1,9 +1,12 @@
 package com.jayce.vexis.business.controllers
 
+import com.alibaba.druid.sql.visitor.functions.If
 import com.jayce.vexis.util.bean.FeedbackBean
 import com.jayce.vexis.business.dao.FeedbackDao
+import com.jayce.vexis.business.dao.UserDao
 import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.foundation.Log
+import com.jayce.vexis.foundation.utils.RedisUtil
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
@@ -17,18 +20,24 @@ class FeedbackManager: MyDispatchServlet() {
     @Autowired
     lateinit var feedbackDao: FeedbackDao
 
+    @Autowired
+    lateinit var userDao: UserDao
+
     @RequestMapping("/sendFeedback")
     @ResponseBody
-    fun addFeedback(
+    fun sendFeedback(
+        feedbackID: String,
         userID: String,
         title: String,
         content: String,
+        type: String
     ): Boolean {
+        val userName = userDao.findByID(userID)?.name ?: "匿名用户"
         val feedbackBean = FeedbackBean(
-            "123",
-            "",
+            feedbackID,
+            userName,
             userID,
-            "normal",
+            type,
             title,
             content,
             System.currentTimeMillis(),
@@ -36,7 +45,6 @@ class FeedbackManager: MyDispatchServlet() {
             0
         )
         feedbackDao.insertFeedback(feedbackBean)
-        log.d("$userID  $title  $content  $feedbackBean")
         return true
     }
 
@@ -48,8 +56,15 @@ class FeedbackManager: MyDispatchServlet() {
 
     @RequestMapping("/supportFeedback")
     @ResponseBody
-    fun supportFeedback(feedbackId: String): Boolean {
-        feedbackDao.supportFeedback(feedbackId)
-        return true
+    fun supportFeedback(userId: String, feedbackId: String): Boolean {
+        val status = RedisUtil.removeSupportFeedback(userId, feedbackId)
+        if (status) {
+            feedbackDao.supportFeedback(feedbackId, -1)
+            return false
+        } else {
+            RedisUtil.feedbackSupport(userId, feedbackId)
+            feedbackDao.supportFeedback(feedbackId, 1)
+            return true
+        }
     }
 }

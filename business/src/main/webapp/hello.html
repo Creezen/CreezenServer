@@ -2,15 +2,19 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-
+    <title>管理系统</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-<h1>Test page</h1>
-<form method="post" enctype="multipart/form-data" action="/uploadApk">
-    <p>请选择要上传的文件：</p>
-    <p><input type="file" name="apkFile" /></p>
-    <p><input type="submit" value="上传" /></p>
-</form>
+<h1>APK管理</h1>
+<div class="file">
+    <form class="upload" method="post" enctype="multipart/form-data" action="/uploadApk">
+        <p><input type="file" name="apkFile"/></p>
+        <label>版本号:</label> <label>1.001.001</label> <br>
+        <label>APK大小:</label> <label>34.5M</label> <br>
+        <label>操作人:</label> <label>芜湖</label>
+        <p><input type="submit" value="上传"/></p>
+    </form>
+</div><br>
 </body>
 </html>

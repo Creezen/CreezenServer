@@ -1,19 +1,20 @@
 package com.jayce.vexis.business.controllers
 
-import com.jayce.vexis.util.bean.ArticleBean
-import com.jayce.vexis.util.bean.RemarkBean
-import com.jayce.vexis.util.bean.SectionBean
-import com.jayce.vexis.util.bean.SectionRemarkBean
-import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.business.dao.ArticleDao
+import com.jayce.vexis.core.MyDispatchServlet
 import com.jayce.vexis.foundation.Log
-import java.math.BigInteger
+import com.jayce.vexis.util.bean.*
+import com.jayce.vexis.util.getRandomString
+import com.jayce.vexis.util.toBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RequestPart
 import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.multipart.MultipartFile
+import java.io.File
 
 @Controller
 class ArticleManager : MyDispatchServlet() {
@@ -23,13 +24,14 @@ class ArticleManager : MyDispatchServlet() {
     @Autowired
     lateinit var articleDao: ArticleDao
 
-    @RequestMapping("/postSynergy")
+    @RequestMapping("/postArticle")
     @ResponseBody
     @Transactional
-    fun saveSynergy(
-        articleTitle: String,
-        @RequestParam paragraphs: ArrayList<String>,
-        userID: String,
+    fun postArticle(
+        @RequestParam articleTitle: String,
+        @RequestParam userID: String,
+        @RequestParam contents: String,
+        @RequestPart("articleFile", required = false) articleFile: List<MultipartFile>?,
     ): Boolean {
         val time = System.currentTimeMillis()
         val article = ArticleBean().apply {
@@ -40,56 +42,80 @@ class ArticleManager : MyDispatchServlet() {
             favor = 0
         }
         articleDao.saveArticle(article)
-        paragraphs.forEach {
-            val sectionBean = SectionBean().apply {
-                articleId = article.articleId
-                content = it
+        val sections = contents.toBean<List<ArticleContentBean>>() ?: listOf()
+        var fileIndex = 0
+        sections.forEachIndexed { index, sec ->
+            val content = when (sec.type) {
+                0 -> sec.content
+                1 -> {
+                    articleFile?.get(fileIndex)?.let {
+                        val fileId = "${getRandomString(6)}${System.currentTimeMillis()}"
+                        val suffixIndex = it.originalFilename?.lastIndexOf(".") ?: 0
+                        val fileSuffix = it.originalFilename?.substring(suffixIndex)
+                        val destFile = File("$BASE_FILE_PATH${fileId}${fileSuffix}")
+                        it.transferTo(destFile)
+                        fileIndex++
+                        "${fileId}${fileSuffix}"
+                    } ?: run { "" }
+                }
+                else -> ""
             }
-            articleDao.saveParagraph(sectionBean)
+            val sectionBean = SectionBean (
+                article.articleId,
+                -1,
+                index,
+                sec.type,
+                content
+            )
+            articleDao.saveSection(sectionBean)
         }
         return true
     }
 
-    @RequestMapping("getSynergy")
+    @RequestMapping("getArticle")
     @ResponseBody
-    fun getSynergy(): List<ArticleBean> = articleDao.getArticle()
+    fun getArticle(): List<ArticleBean> = articleDao.getArticle()
 
     @RequestMapping("getSection")
     @ResponseBody
     @Transactional
     fun getSection(articleId: Long): List<SectionRemarkBean> {
-        val paragraphList = articleDao.getSections(articleId)
-        val paragraphCommandList = arrayListOf<SectionRemarkBean>()
-        paragraphList.forEach {
-            val commandList = articleDao.getComment(it.sectionId)
-            val paragraphCommandBean = SectionRemarkBean(
+        val sectionList = articleDao.getSections(articleId)
+        val remarkList = arrayListOf<SectionRemarkBean>()
+        sectionList.forEach {
+            val sectionRemarkList = articleDao.getRemark(it.sectionId)
+            val sectionRemarkBean = SectionRemarkBean(
+                it.articleId,
                 it.sectionId,
+                it.type,
                 it.content,
-                commandList
+                sectionRemarkList
             )
-            paragraphCommandList.add(paragraphCommandBean)
+            remarkList.add(sectionRemarkBean)
         }
-        return paragraphCommandList
+        return remarkList
     }
 
-    @RequestMapping("postCommen")
+    @RequestMapping("postRemark")
     @ResponseBody
-    fun postCommen(
-        articleId: BigInteger,
-        paragraphId: Long,
-        userId: String,
-        comment: String,
-    ): Boolean {
-        log.d("receive commen:  $comment")
-        articleDao.insertComment(RemarkBean(
-            articleId,
-            paragraphId,
+    fun postRemark(sectionId: Long, userId: String, content: String, type: Int): Boolean {
+        log.d("receive remark:  $content")
+        articleDao.insertRemark(RemarkBean(
+            sectionId,
             userId,
-            -1,
-            comment,
+            0L,
+            content,
+            type,
             0,
-            System.currentTimeMillis().toBigInteger()
+            System.currentTimeMillis()
         ))
+        return true
+    }
+
+    @RequestMapping("deleteArticle")
+    @ResponseBody
+    fun deleteArticle(articleId: Long): Boolean {
+        articleDao.deleteArticle(articleId)
         return true
     }
 }

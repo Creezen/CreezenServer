@@ -15,4 +15,8 @@ interface UserDao {
 
     fun setAdmin(userId: String): Boolean
     fun deleteUser(userId: String): Boolean
+
+    fun queryRelation(userId: String, fansId: String): Int
+    fun followUser(userId: String, fansId: String, relation: Int): Boolean
+    fun updateRelation(userId: String): Boolean
 }

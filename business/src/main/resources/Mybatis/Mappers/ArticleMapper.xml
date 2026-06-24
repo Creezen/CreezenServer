@@ -8,8 +8,8 @@
         values (#{userId}, #{title}, #{createTime}, #{updateTime}, #{favor})
     </insert>
     
-    <insert id="saveParagraph" parameterType="sectionBean">
-        insert into section(articleId, content) values (#{articleId}, #{content})
+    <insert id="saveSection" parameterType="sectionBean">
+        insert into section(articleId, orderId, type, content) values (#{articleId}, #{orderId}, #{type}, #{content})
     </insert>
 
     <select id="getArticle" resultType="articleBean">
@@ -17,15 +17,19 @@
     </select>
     
     <select id="getSections" parameterType="Long" resultType="sectionBean">
-        select * from section where articleId = #{articleId} order by sectionId
+        select * from section where articleId = #{articleId} order by orderId
     </select>
 
-    <select id="getComment" parameterType="Long" resultType="remarkBean">
-        select * from remark where sectionId = #{paragraphId}
+    <select id="getRemark" parameterType="Long" resultType="remarkBean">
+        select * from remark where sectionId = #{sectionId} order by sectionId
     </select>
 
-    <insert id="insertComment" parameterType="remarkBean">
-        insert into remark(articleId, sectionId, userId, comment, favor, createTime)
-            values (#{articleId}, #{sectionId}, #{userId}, #{cotent}, #{favor}, #{createTime})
+    <insert id="insertRemark" parameterType="remarkBean">
+        insert into remark(sectionId, userId, content, type, favor, createTime)
+            values (#{sectionId}, #{userId}, #{content}, ${type}, #{favor}, #{createTime})
     </insert>
+    
+    <delete id="deleteArticle">
+        delete from article where articleId = #{articleId}
+    </delete>
 </mapper>

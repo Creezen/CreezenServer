@@ -20,6 +20,12 @@
             <mvc:exclude-mapping path="/checkInfo"/>
             <mvc:exclude-mapping path="/register"/>
             <mvc:exclude-mapping path="/*.html"/>
+            <mvc:exclude-mapping path="/*.css"/>
+            <mvc:exclude-mapping path="/scripts/*.js"/>
+            <mvc:exclude-mapping path="/web/**"/>
+            <mvc:exclude-mapping path="/uploadApk"/>
+            <mvc:exclude-mapping path="/checkApkInfo"/>
+            <mvc:exclude-mapping path="/aaa"/>
             <bean class="com.jayce.vexis.core.StatusInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
